@@ -677,7 +677,7 @@ async function generate(){
     // renderCards(data.text);
 
     // LOCAL TESTING ONLY: paste your Anthropic key here, remove before deploying
-    const KEY='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';
+    const KEY='YOUR_ANTHROPIC_KEY_HERE';
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
@@ -837,7 +837,6 @@ setInterval(()=>{
   const panel = document.getElementById('test-panel');
   if(panel && panel.style.display !== 'none') updateTestPanel();
 }, 1000);
-
-
+</script>
 </body>
 </html>
