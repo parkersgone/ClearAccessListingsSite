@@ -53,6 +53,7 @@ exports.handler = async (event) => {
       'line_items[0][quantity]': '1',
       'subscription_data[trial_period_days]': '14',
       'payment_method_collection': 'always',
+      'payment_method_types[0]': 'card',  // Force card field — disables Link/wallet default
       'success_url': 'https://clearaccesslistings.com/app.html?subscribed=true',
       'cancel_url': 'https://clearaccesslistings.com/app.html?cancelled=true',
     });
