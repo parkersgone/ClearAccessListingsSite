@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0047)file:///C:/Users/Deku4/Downloads/app_FINAL.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clear Access Listings | Copywriting Agent</title>
 <meta name="description" content="Three professional real estate listing descriptions in under 60 seconds.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./app_files/css2" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -166,8 +166,8 @@ select option{background:var(--dark3)}
         <span class="sub">Professional Listing Copy</span>
       </div>
       <div class="tabs">
-        <button class="tab active" onclick="authTab('in')">Sign In</button>
-        <button class="tab" onclick="authTab('up')">Start Free Trial</button>
+        <button class="tab active" onclick="authTab(&#39;in&#39;)">Sign In</button>
+        <button class="tab" onclick="authTab(&#39;up&#39;)">Start Free Trial</button>
       </div>
 
       <div id="pane-in">
@@ -176,7 +176,7 @@ select option{background:var(--dark3)}
         <div class="err-msg" id="li-err"></div>
         <button class="btn btn-gold" style="margin-bottom:0.85rem" onclick="doLogin()">Sign In</button>
         <div class="divider">new here?</div>
-        <button class="btn btn-outline" style="margin-bottom:0.6rem" onclick="authTab('up')">Start 14-Day Free Trial</button>
+        <button class="btn btn-outline" style="margin-bottom:0.6rem" onclick="authTab(&#39;up&#39;)">Start 14-Day Free Trial</button>
         <button class="demo-link" onclick="doDemo()">View demo first, no account needed</button>
       </div>
 
@@ -193,7 +193,7 @@ select option{background:var(--dark3)}
           <!-- PRODUCTION: Replace this entire div with your Stripe Elements mount point -->
           <!-- <div id="stripe-card-element"></div> -->
           <div class="card-mock">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.4"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.4"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
             <span>Card number</span>
             <div class="card-logos"><span class="card-logo">VISA</span><span class="card-logo">MC</span></div>
           </div>
@@ -213,13 +213,13 @@ select option{background:var(--dark3)}
 <div class="screen" id="s-app">
   <div class="topbar">
     <div class="topbar-left">
-      <span style="font-family:'Playfair Display',serif;color:var(--gold);letter-spacing:0.04em;font-size:0.95rem">Clear Access Listings</span>
+      <span style="font-family:&#39;Playfair Display&#39;,serif;color:var(--gold);letter-spacing:0.04em;font-size:0.95rem">Clear Access Listings</span>
       <span id="demo-badge" class="demo-badge" style="display:none">Demo Mode</span>
     </div>
     <div class="topbar-right">
-      <a href="index.html" class="home-link">Home</a>
+      <a href="file:///C:/Users/Deku4/Downloads/index.html" class="home-link">Home</a>
       <span id="trial-pill" class="trial-pill" style="display:none">Trial: 14 days left</span>
-      <button class="btn btn-gold" id="upgrade-btn" style="padding:0.32rem 0.85rem;font-size:0.78rem;width:auto;display:none" onclick="goScreen('s-pay')">Upgrade</button>
+      <button class="btn btn-gold" id="upgrade-btn" style="padding:0.32rem 0.85rem;font-size:0.78rem;width:auto;display:none" onclick="goScreen(&#39;s-pay&#39;)">Upgrade</button>
       <button class="btn-ghost" onclick="signOut()">Sign Out</button>
     </div>
   </div>
@@ -289,17 +289,17 @@ select option{background:var(--dark3)}
       <h2>Choose your plan</h2>
       <p class="pw-sub">Flat monthly rate. No per-listing fees. Generous generation limits per plan.</p>
       <div class="plan-grid" style="grid-template-columns:1fr 1fr 1fr">
-        <div class="plan sel" id="pl-solo" onclick="selPlan('solo')">
+        <div class="plan sel" id="pl-solo" onclick="selPlan(&#39;solo&#39;)">
           <span class="plan-badge">Solo Agent</span>
           <div class="plan-price">$197<em>/mo</em></div>
           <div class="plan-note">60 generations/mo. One seat.</div>
         </div>
-        <div class="plan" id="pl-team" onclick="selPlan('team')">
+        <div class="plan" id="pl-team" onclick="selPlan(&#39;team&#39;)">
           <span class="plan-badge">Team</span>
           <div class="plan-price">$397<em>/mo</em></div>
           <div class="plan-note">200 generations/mo. Up to 10 seats.</div>
         </div>
-        <div class="plan" id="pl-enterprise" onclick="selPlan('enterprise')">
+        <div class="plan" id="pl-enterprise" onclick="selPlan(&#39;enterprise&#39;)">
           <span class="plan-badge">Enterprise</span>
           <div class="plan-price">$1,497<em>/mo</em></div>
           <div class="plan-note">Unlimited generations. Unlimited seats.</div>
@@ -308,60 +308,65 @@ select option{background:var(--dark3)}
       <div class="field" style="margin-bottom:1rem;text-align:left"><label>Billing cycle</label>
         <select id="billing-cycle"><option value="monthly">Monthly billing</option><option value="annual">Annual billing, save 20%</option></select>
       </div>
-      <button class="btn btn-gold" style="margin-bottom:0.6rem" onclick="subscribe()">Subscribe with Stripe</button>
-      <button class="btn btn-outline" onclick="goScreen('s-app')">Back to App</button>
+      <button class="btn btn-gold" style="margin-bottom:0.6rem" id="paywall-cta-btn" onclick="handlePaywallCta()">Subscribe with Stripe</button>
+      <button class="btn btn-outline" onclick="goScreen(&#39;s-app&#39;)">Back to App</button>
       <p class="pw-fine">Processed securely by Stripe. Clear Access Listings never stores card details.</p>
     </div>
   </div>
 </div>
 
 <!-- ══ TEST PANEL (test login only — remove before launch) ══ -->
-<button id="test-toggle" onclick="document.getElementById('test-panel').style.display=document.getElementById('test-panel').style.display==='none'?'block':'none'">🧪 Test Panel</button>
+<button id="test-toggle" onclick="document.getElementById(&#39;test-panel&#39;).style.display=document.getElementById(&#39;test-panel&#39;).style.display===&#39;none&#39;?&#39;block&#39;:&#39;none&#39;">🧪 Test Panel</button>
 <div id="test-panel">
   <div class="tp-title">Dev Test Panel</div>
 
   <div class="tp-group">
     <div class="tp-label">Simulate User State</div>
-    <button class="tp-btn gold" onclick="testSetState('trial',14,'solo',3)">✦ Fresh Trial (3 gens used)</button>
-    <button class="tp-btn gold" onclick="testSetState('trial',14,'solo',4)">✦ Trial: 1 gen left</button>
-    <button class="tp-btn danger" onclick="testSetState('trial',14,'solo',5)">✦ Trial: 0 gens — hits paywall</button>
-    <button class="tp-btn" onclick="testSetState('trial',1,'solo',0)">✦ Trial: 1 day left</button>
-    <button class="tp-btn danger" onclick="testSetState('trial',0,'solo',5)">✦ Trial expired (days=0)</button>
+    <button class="tp-btn gold" onclick="testSetState(&#39;trial&#39;,14,&#39;solo&#39;,3)">✦ Fresh Trial (3 gens used)</button>
+    <button class="tp-btn gold" onclick="testSetState(&#39;trial&#39;,14,&#39;solo&#39;,4)">✦ Trial: 1 gen left</button>
+    <button class="tp-btn danger" onclick="testSetState(&#39;trial&#39;,14,&#39;solo&#39;,5)">✦ Trial: 0 gens — hits paywall</button>
+    <button class="tp-btn" onclick="testSetState(&#39;trial&#39;,1,&#39;solo&#39;,0)">✦ Trial: 1 day left</button>
+    <button class="tp-btn danger" onclick="testSetState(&#39;trial&#39;,0,&#39;solo&#39;,5)">✦ Trial expired (days=0)</button>
   </div>
 
   <div class="tp-divider"></div>
 
   <div class="tp-group">
     <div class="tp-label">Simulate Paid Plans</div>
-    <button class="tp-btn success" onclick="testSetState('active',0,'solo',0)">✦ Solo subscriber (60 gen)</button>
-    <button class="tp-btn success" onclick="testSetState('active',0,'solo',58)">✦ Solo: 2 gens left</button>
-    <button class="tp-btn danger" onclick="testSetState('active',0,'solo',60)">✦ Solo: limit hit</button>
-    <button class="tp-btn success" onclick="testSetState('active',0,'team',0)">✦ Team subscriber</button>
-    <button class="tp-btn success" onclick="testSetState('active',0,'enterprise',0)">✦ Enterprise (unlimited)</button>
+    <button class="tp-btn success" onclick="testSetState(&#39;active&#39;,0,&#39;solo&#39;,0)">✦ Solo subscriber (60 gen)</button>
+    <button class="tp-btn success" onclick="testSetState(&#39;active&#39;,0,&#39;solo&#39;,58)">✦ Solo: 2 gens left</button>
+    <button class="tp-btn danger" onclick="testSetState(&#39;active&#39;,0,&#39;solo&#39;,60)">✦ Solo: limit hit</button>
+    <button class="tp-btn success" onclick="testSetState(&#39;active&#39;,0,&#39;team&#39;,0)">✦ Team subscriber</button>
+    <button class="tp-btn success" onclick="testSetState(&#39;active&#39;,0,&#39;enterprise&#39;,0)">✦ Enterprise (unlimited)</button>
   </div>
 
   <div class="tp-divider"></div>
 
   <div class="tp-group">
     <div class="tp-label">Simulate Screens</div>
-    <button class="tp-btn" onclick="goScreen('s-auth');authTab('in')">→ Sign In screen</button>
-    <button class="tp-btn" onclick="goScreen('s-auth');authTab('up')">→ Sign Up screen</button>
+    <button class="tp-btn" onclick="goScreen(&#39;s-auth&#39;);authTab(&#39;in&#39;)">→ Sign In screen</button>
+    <button class="tp-btn" onclick="goScreen(&#39;s-auth&#39;);authTab(&#39;up&#39;)">→ Sign Up screen</button>
     <button class="tp-btn" onclick="doDemo()">→ Demo mode</button>
-    <button class="tp-btn" onclick="goScreen('s-pay')">→ Paywall / upgrade</button>
+    <button class="tp-btn" onclick="goScreen(&#39;s-pay&#39;)">→ Paywall / upgrade</button>
   </div>
 
   <div class="tp-divider"></div>
 
   <div class="tp-group">
     <div class="tp-label">Actions</div>
-    <button class="tp-btn" onclick="localStorage.setItem('cal_gens','0');updateGenCounter();toast('Generation count reset to 0','ok')">↺ Reset gen count</button>
-    <button class="tp-btn danger" onclick="testSetState('trial',14,'solo',5);goScreen('s-pay')">✦ Force paywall now</button>
+    <button class="tp-btn" onclick="localStorage.setItem(&#39;cal_gens&#39;,&#39;0&#39;);updateGenCounter();toast(&#39;Generation count reset to 0&#39;,&#39;ok&#39;)">↺ Reset gen count</button>
+    <button class="tp-btn danger" onclick="testSetState(&#39;trial&#39;,14,&#39;solo&#39;,5);goScreen(&#39;s-pay&#39;)">✦ Force paywall now</button>
   </div>
 
   <div class="tp-divider"></div>
 
   <div class="tp-label">Current State</div>
-  <div class="tp-state" id="tp-state-display">loading...</div>
+  <div class="tp-state" id="tp-state-display">mode: guest
+plan: solo
+trialDays: 14
+gens used: 0
+gens limit: 60
+gens left: 60</div>
 </div>
 
 <div id="toasts"></div>
@@ -538,10 +543,15 @@ function doLogin(){
     APP={mode:'trial',isDemo:false,trialDays:14,plan:'solo'};
     localStorage.setItem('cal_gens','0');
     enterApp();
-    // Show test panel and toggle button
-    document.getElementById('test-toggle').style.display='block';
-    updateTestPanel();
-    toast('Test mode active. Use the 🧪 panel bottom-left.','ok');
+    // Show test panel AFTER enterApp so screen transition is complete
+    setTimeout(()=>{
+      const toggle = document.getElementById('test-toggle');
+      const panel = document.getElementById('test-panel');
+      if(toggle) toggle.style.display='block';
+      if(panel) panel.style.display='block'; // Open panel immediately so it's obvious
+      updateTestPanel();
+      toast('🧪 Test mode active. Panel is open bottom-left.','ok');
+    }, 100);
     return;
   }
   // ── END TEST LOGIN ──
@@ -676,8 +686,19 @@ async function generate(){
     // const data=await res.json();
     // renderCards(data.text);
 
-    // LOCAL TESTING ONLY: paste your Anthropic key here, remove before deploying
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // PASTE YOUR ANTHROPIC API KEY BELOW
+    // Get it from: console.anthropic.com → API Keys
+    // Looks like: sk-ant-api03-xxxxxxxxxxxx...
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     const KEY='YOUR_ANTHROPIC_KEY_HERE';
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    if(!KEY||KEY==='YOUR_ANTHROPIC_KEY_HERE'){
+      toast('No API key set. Open app.html and paste your Anthropic key where it says YOUR_ANTHROPIC_KEY_HERE.','bad');
+      setLoading(false);
+      return;
+    }
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json','x-api-key':KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
@@ -751,6 +772,27 @@ function selPlan(p){
     const el=g('pl-'+id);
     if(el) el.classList.toggle('sel',id===p);
   });
+  // Update the CTA button based on plan
+  const btn=g('paywall-cta-btn');
+  if(!btn) return;
+  if(p==='enterprise'){
+    btn.textContent='Contact Us for Enterprise Access';
+    btn.style.background='transparent';
+    btn.style.border='1px solid var(--gold-border)';
+    btn.style.color='var(--gold-light)';
+  } else {
+    btn.textContent='Subscribe with Stripe';
+    btn.style.background='var(--gold)';
+    btn.style.border='none';
+    btn.style.color='#161200';
+  }
+}
+function handlePaywallCta(){
+  if(APP.plan==='enterprise'){
+    window.location.href='mailto:hello@clearaccesslistings.com?subject=Enterprise Plan Inquiry&body=Hi, I\'m interested in the Clear Access Listings Enterprise plan ($1,497/month). Please send me more information.';
+  } else {
+    subscribe();
+  }
 }
 function subscribe(){
   // PRODUCTION:
@@ -838,5 +880,5 @@ setInterval(()=>{
   if(panel && panel.style.display !== 'none') updateTestPanel();
 }, 1000);
 </script>
-</body>
-</html>
+
+</body></html>
