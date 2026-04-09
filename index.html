@@ -1,1012 +1,688 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clear Access Listings - Listing Copy That Gets Showings Booked</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clear Access Listings | Real Estate Copy That Actually Sells</title>
+<meta name="description" content="Not ChatGPT. A purpose-built real estate copywriting agent trained on NAR data, Zillow word studies, and Fair Housing law. Five professional outputs per listing in under 60 seconds. From $197/month.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--gold-light:#E8C97A;--gold-dim:rgba(201,168,76,0.10);--gold-border:rgba(201,168,76,0.22);
+  --dark:#0B0B09;--dark2:#121210;--dark3:#191916;--dark4:#202020;
+  --border:rgba(255,255,255,0.06);--border-med:rgba(255,255,255,0.10);
+  --text:#EAE6DB;--text-muted:#8A8775;--text-dim:#4E4E46;
+  --red:#E05252;--green:#4CAF7D;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--dark);color:var(--text);font-size:16px;line-height:1.65;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.container{max-width:1080px;margin:0 auto;padding:0 2rem}
+.container-sm{max-width:760px;margin:0 auto;padding:0 2rem}
+.section{padding:6rem 0}
+.eyebrow{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--gold);margin-bottom:0.75rem}
+h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.12}
 
-  <style>
-    /* ─── RESET ─── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+.cta-primary{display:inline-flex;align-items:center;gap:0.5rem;background:var(--gold);color:#140F00;padding:0.9rem 2rem;border-radius:9px;font-family:var(--sans);font-size:0.95rem;font-weight:500;transition:all 0.18s;white-space:nowrap}
+.cta-primary:hover{background:var(--gold-light);transform:translateY(-1px)}
+.cta-secondary{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;border:1px solid var(--border-med);color:var(--text-muted);padding:0.9rem 1.75rem;border-radius:9px;font-family:var(--sans);font-size:0.95rem;transition:all 0.18s;white-space:nowrap}
+.cta-secondary:hover{border-color:var(--gold-border);color:var(--text)}
 
-    /* ─── TOKENS ─── */
-    :root {
-      --blue:      #1E90D6;
-      --blue-dk:   #1570B0;
-      --blue-lt:   #EBF5FC;
-      --green:     #5EAD2F;
-      --red-lt:    #FEF2F2;
-      --red:       #DC2626;
-      --gray-50:   #F9FAFB;
-      --gray-100:  #F3F4F6;
-      --gray-200:  #E5E7EB;
-      --gray-400:  #9CA3AF;
-      --gray-500:  #6B7280;
-      --gray-700:  #374151;
-      --gray-900:  #111827;
-      --white:     #FFFFFF;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,.07);
-      --shadow-md: 0 4px 16px rgba(0,0,0,.08);
-      --shadow-lg: 0 10px 36px rgba(0,0,0,.10);
-      --r:  12px;
-      --rl: 18px;
-    }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0.9rem 2rem;background:rgba(11,11,9,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--serif);font-size:1.05rem;color:var(--gold);letter-spacing:0.04em}
+.nav-right{display:flex;align-items:center;gap:1.5rem}
+.nav-right a:not(.nav-cta){font-size:0.83rem;color:var(--text-muted);transition:color 0.15s}
+.nav-right a:not(.nav-cta):hover{color:var(--text)}
+.nav-price{font-size:0.78rem;color:var(--text-dim)}
+.nav-cta{background:var(--gold);color:#140F00;padding:0.45rem 1.1rem;border-radius:7px;font-size:0.83rem;font-weight:500;transition:background 0.15s}
+.nav-cta:hover{background:var(--gold-light);color:#140F00}
 
-    /* ─── BASE ─── */
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, Helvetica, sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-      color: var(--gray-700);
-      background: var(--white);
-      -webkit-font-smoothing: antialiased;
-    }
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:9rem 2rem 6rem;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:-5%;left:50%;transform:translateX(-50%);width:1100px;height:750px;background:radial-gradient(ellipse at 50% 10%,rgba(201,168,76,0.08) 0%,transparent 58%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.035) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 75% 55% at 50% 0,black 0,transparent 72%);pointer-events:none}
+.hero-kicker{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(224,82,82,0.08);border:1px solid rgba(224,82,82,0.18);border-radius:20px;padding:0.3rem 0.9rem;font-size:0.72rem;color:#E08888;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:1.75rem}
+.hero h1{font-family:var(--serif);font-size:clamp(3rem,6.5vw,5.5rem);font-weight:500;line-height:1.06;max-width:840px;margin:0 auto 1.5rem;color:var(--text)}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero h1 .dim{color:var(--text-dim)}
+.hero-sub{font-size:1.05rem;color:var(--text-muted);max-width:560px;margin:0 auto 2.25rem;line-height:1.75}
+.hero-ctas{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.hero-fine{font-size:0.78rem;color:var(--text-dim);display:flex;align-items:center;justify-content:center;gap:0.6rem;flex-wrap:wrap}
+.fine-dot{width:3px;height:3px;background:var(--text-dim);border-radius:50%}
+.price-banner{display:inline-flex;align-items:center;gap:0.75rem;margin-top:2.25rem;padding:0.65rem 1.4rem;background:var(--dark2);border:1px solid var(--gold-border);border-radius:9px}
+.pb-from{font-size:0.78rem;color:var(--text-dim)}
+.pb-price{font-family:var(--serif);font-size:1.65rem;color:var(--gold);line-height:1}
+.pb-period{font-size:0.8rem;color:var(--text-muted)}
+.pb-sep{width:1px;height:24px;background:var(--border-med)}
+.pb-note{font-size:0.75rem;color:var(--text-dim)}
 
-    /* ─── NAV ─── */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 200;
-      background: rgba(255,255,255,.96);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--gray-200);
-    }
-    .nav-inner {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 0 24px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-    .nav-logo img {
-      height: 36px;
-      width: auto;
-    }
-    .nav-wordmark {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.15;
-    }
-    .nav-wordmark strong {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--gray-900);
-      letter-spacing: -.2px;
-    }
-    .nav-wordmark span {
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: 2.4px;
-      text-transform: uppercase;
-      color: var(--blue);
-    }
-    .nav-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: var(--blue);
-      color: var(--white);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 700;
-      padding: 9px 18px;
-      border-radius: 8px;
-      transition: background .18s, transform .15s;
-    }
-    .nav-btn:hover { background: var(--blue-dk); transform: translateY(-1px); }
-    .nav-btn svg { flex-shrink: 0; }
+/* PROOF BAR */
+.proof-bar{padding:1.6rem 0;background:var(--dark2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.proof-inner{display:flex;align-items:center;justify-content:center;gap:3rem;flex-wrap:wrap}
+.proof-stat{text-align:center}
+.proof-num{font-family:var(--serif);font-size:1.65rem;color:var(--gold);display:block;line-height:1}
+.proof-label{font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.3rem}
+.proof-div{width:1px;height:32px;background:var(--border-med)}
 
-    /* ─── HERO ─── */
-    .hero {
-      background: linear-gradient(165deg, #EBF5FC 0%, #FFFFFF 55%);
-      padding: 72px 24px 64px;
-    }
-    .hero-inner {
-      max-width: 1080px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      gap: 56px;
-    }
-    .hero-text { max-width: 540px; }
-    .hero-eyebrow {
-      display: inline-block;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
-      color: var(--blue);
-      margin-bottom: 16px;
-    }
-    .hero h1 {
-      font-size: clamp(30px, 4.5vw, 50px);
-      font-weight: 700;
-      color: var(--gray-900);
-      line-height: 1.14;
-      letter-spacing: -.8px;
-      margin-bottom: 18px;
-    }
-    .hero h1 em {
-      font-style: normal;
-      color: var(--blue);
-    }
-    .hero-sub {
-      font-size: 17px;
-      color: var(--gray-500);
-      margin-bottom: 32px;
-      line-height: 1.65;
-      max-width: 480px;
-    }
-    .hero-actions { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      font-weight: 700;
-      border-radius: 9px;
-      transition: background .18s, transform .15s, box-shadow .18s;
-    }
-    .btn-lg { font-size: 16px; padding: 14px 30px; }
-    .btn-blue {
-      background: var(--blue);
-      color: var(--white);
-      box-shadow: 0 4px 18px rgba(30,144,214,.28);
-    }
-    .btn-blue:hover {
-      background: var(--blue-dk);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 26px rgba(30,144,214,.36);
-    }
-    .btn-blue svg, .btn svg { flex-shrink: 0; }
-    .hero-note {
-      font-size: 13px;
-      color: var(--gray-400);
-    }
+/* OBJECTION SECTION */
+.objection-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:3.5rem}
+.obj-card{background:var(--dark2);border:1px solid var(--border);border-radius:14px;padding:2rem;position:relative;overflow:hidden}
+.obj-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.obj-card.bad::after{background:linear-gradient(90deg,var(--red),transparent)}
+.obj-card.good::after{background:linear-gradient(90deg,var(--gold),transparent)}
+.obj-tag{font-size:0.69rem;text-transform:uppercase;letter-spacing:0.09em;margin-bottom:1.25rem;display:block;font-weight:500}
+.obj-card.bad .obj-tag{color:#E08888}
+.obj-card.good .obj-tag{color:var(--gold)}
+.obj-card h3{font-family:var(--serif);font-size:1.3rem;font-weight:500;margin-bottom:0.85rem;line-height:1.25}
+.obj-card .lead{font-size:0.88rem;color:var(--text-muted);line-height:1.7;margin-bottom:1rem}
+.obj-list{list-style:none;display:flex;flex-direction:column;gap:0.55rem}
+.obj-list li{font-size:0.83rem;color:var(--text-muted);display:flex;align-items:flex-start;gap:0.5rem;line-height:1.5}
+.obj-list li .mk{flex-shrink:0;font-size:0.72rem;margin-top:0.18rem;font-weight:700}
+.obj-card.bad .mk{color:var(--red)}
+.obj-card.good .mk{color:var(--green)}
 
-    /* ─── HERO VISUAL ─── */
-    .hero-visual {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .hero-logo-wrap {
-      background: var(--white);
-      border-radius: var(--rl);
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--gray-200);
-      padding: 40px 48px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      max-width: 340px;
-      width: 100%;
-    }
-    .hero-logo-wrap img { width: 180px; height: auto; }
-    .hero-logo-caption {
-      font-size: 13px;
-      color: var(--gray-400);
-      text-align: center;
-      line-height: 1.5;
-    }
+/* COMPARISON */
+.compare-wrap{max-width:780px;margin:0 auto}
+.compare-toggle{display:flex;align-items:center;justify-content:center;gap:0;background:var(--dark3);border:1px solid var(--border);border-radius:10px;padding:4px;width:fit-content;margin:2.5rem auto}
+.toggle-btn{padding:0.5rem 1.3rem;border-radius:7px;font-size:0.82rem;cursor:pointer;border:none;font-family:var(--sans);background:transparent;color:var(--text-muted);transition:all 0.18s}
+.toggle-btn.active{background:var(--dark);border:1px solid var(--border-med);color:var(--text)}
+.toggle-btn.active.gpt{color:#E08888}
+.toggle-btn.active.cal{color:var(--gold)}
+.compare-card{background:var(--dark3);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.compare-head{display:flex;align-items:center;justify-content:space-between;padding:0.85rem 1.3rem;border-bottom:1px solid var(--border)}
+.compare-label{font-size:0.75rem;font-weight:500;letter-spacing:0.04em}
+.compare-label.gpt{color:#E08888}
+.compare-label.cal{color:var(--gold)}
+.c-badge{font-size:0.65rem;padding:0.15rem 0.5rem;border-radius:4px;border:1px solid}
+.c-badge.gpt{background:rgba(224,82,82,0.09);border-color:rgba(224,82,82,0.2);color:#E08888}
+.c-badge.cal{background:var(--gold-dim);border-color:var(--gold-border);color:var(--gold-light)}
+.compare-body{padding:1.5rem;font-size:0.9rem;line-height:1.82;color:var(--text-muted);white-space:pre-wrap}
+.compare-body.cal{color:var(--text)}
+.compare-body.hidden{display:none}
+.compare-annot{padding:0.85rem 1.3rem;border-top:1px solid var(--border);font-size:0.75rem;color:var(--text-dim);display:flex;align-items:flex-start;gap:0.5rem;line-height:1.55}
 
-    /* ─── STAT STRIP ─── */
-    .stats {
-      background: var(--gray-50);
-      border-top: 1px solid var(--gray-200);
-      border-bottom: 1px solid var(--gray-200);
-      padding: 24px;
-    }
-    .stats-inner {
-      max-width: 760px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: center;
-      gap: 0;
-      flex-wrap: wrap;
-    }
-    .stat {
-      flex: 1;
-      min-width: 150px;
-      text-align: center;
-      padding: 8px 20px;
-      position: relative;
-    }
-    .stat + .stat::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 20%; bottom: 20%;
-      width: 1px;
-      background: var(--gray-200);
-    }
-    .stat-n {
-      display: block;
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--blue);
-      letter-spacing: -.5px;
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-    .stat-l {
-      font-size: 12.5px;
-      color: var(--gray-500);
-    }
+/* OUTPUT SHOWCASE */
+.showcase-tabs{display:flex;gap:0.5rem;margin:2.5rem 0 1.25rem;flex-wrap:wrap}
+.stab{background:transparent;border:1px solid var(--border);border-radius:7px;padding:0.4rem 0.9rem;font-size:0.8rem;color:var(--text-muted);cursor:pointer;font-family:var(--sans);transition:all 0.15s}
+.stab.active,.stab:hover{border-color:var(--gold-border);color:var(--gold)}
+.stab.social{border-color:rgba(138,99,210,0.25);color:#A07AE0}
+.stab.social.active,.stab.social:hover{border-color:rgba(138,99,210,0.45);color:#C4A8FF;background:rgba(138,99,210,0.07)}
+.showcase-card{background:var(--dark2);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:none}
+.showcase-card.active{display:block}
+.sc-head{display:flex;align-items:center;justify-content:space-between;padding:0.8rem 1.1rem;background:var(--dark3);border-bottom:1px solid var(--border)}
+.sc-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;color:var(--gold)}
+.sc-label.social{color:#C4A8FF}
+.sc-meta{font-size:0.7rem;color:var(--text-dim)}
+.sc-body{padding:1.25rem;font-size:0.9rem;line-height:1.82;color:var(--text);white-space:pre-wrap}
+.sc-chip{display:inline-flex;font-size:0.63rem;padding:0.1rem 0.45rem;border-radius:4px;margin-left:0.5rem;vertical-align:middle;border:1px solid}
+.ig-chip{background:rgba(138,99,210,0.09);border-color:rgba(138,99,210,0.25);color:#C4A8FF}
+.fb-chip{background:rgba(66,103,178,0.09);border-color:rgba(66,103,178,0.25);color:#7B9FE8}
 
-    /* ─── SHARED SECTION STYLES ─── */
-    .section { padding: 80px 24px; }
-    .section-inner { max-width: 1080px; margin: 0 auto; }
-    .section-label {
-      display: inline-block;
-      font-size: 11.5px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--blue);
-      margin-bottom: 12px;
-    }
-    .section-title {
-      font-size: clamp(24px, 3.5vw, 38px);
-      font-weight: 700;
-      color: var(--gray-900);
-      line-height: 1.2;
-      letter-spacing: -.5px;
-    }
-    .section-sub {
-      font-size: 16.5px;
-      color: var(--gray-500);
-      margin-top: 12px;
-      line-height: 1.65;
-      max-width: 580px;
-    }
-    .section-hd { margin-bottom: 48px; }
-    .section-hd.center { text-align: center; }
-    .section-hd.center .section-sub { margin-left: auto; margin-right: auto; }
+/* WHY CARDS */
+.why-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;margin-top:3.5rem}
+.why-card{background:var(--dark2);border:1px solid var(--border);border-radius:12px;padding:1.6rem}
+.why-icon{font-size:1.2rem;margin-bottom:1rem}
+.why-card h3{font-family:var(--serif);font-size:1.08rem;font-weight:500;margin-bottom:0.6rem;line-height:1.3}
+.why-card p{font-size:0.83rem;color:var(--text-muted);line-height:1.68}
+.why-card .pull{color:var(--gold);font-size:0.78rem;margin-top:0.85rem;font-style:italic;line-height:1.5}
 
-    /* ─── PROBLEM SECTION ─── */
-    .problem { background: var(--gray-50); }
-    .problem-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(272px, 1fr));
-      gap: 18px;
-    }
-    .problem-card {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--r);
-      padding: 26px 24px;
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      box-shadow: var(--shadow-sm);
-    }
-    .p-icon {
-      width: 42px; height: 42px;
-      background: var(--red-lt);
-      border-radius: 9px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      color: var(--red);
-    }
-    .p-icon svg { width: 20px; height: 20px; }
-    .p-title {
-      font-size: 14.5px;
-      font-weight: 700;
-      color: var(--gray-900);
-      margin-bottom: 5px;
-    }
-    .p-body {
-      font-size: 13.5px;
-      color: var(--gray-500);
-      line-height: 1.58;
-    }
+/* PRICING */
+.pricing-math{display:grid;grid-template-columns:repeat(3,1fr);gap:0;max-width:680px;margin:3rem auto;background:var(--dark3);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.math-cell{padding:1.6rem;text-align:center;position:relative}
+.math-cell:not(:last-child)::after{content:'';position:absolute;top:18%;right:0;height:64%;width:1px;background:var(--border)}
+.math-big{font-family:var(--serif);font-size:2rem;display:block;margin-bottom:0.25rem;line-height:1}
+.math-big.red{color:#E08888}
+.math-big.gold{color:var(--gold)}
+.math-big.green{color:var(--green)}
+.math-label{font-size:0.72rem;color:var(--text-dim);line-height:1.45}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;max-width:780px;margin:3rem auto 0}
+.price-card{background:var(--dark);border:1px solid var(--border);border-radius:14px;padding:2rem}
+.price-card.featured{border-color:var(--gold-border)}
+.price-badge{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.09em;color:var(--gold);margin-bottom:0.6rem;display:block}
+.price-name{font-family:var(--serif);font-size:1.2rem;margin-bottom:0.3rem}
+.price-amount{font-family:var(--serif);font-size:2.5rem;margin:0.25rem 0;line-height:1}
+.price-amount em{font-size:0.88rem;color:var(--text-muted);font-family:var(--sans);font-style:normal}
+.price-annual{font-size:0.75rem;color:var(--green);margin-bottom:0.75rem}
+.price-desc{font-size:0.83rem;color:var(--text-muted);margin-bottom:1.4rem;line-height:1.55}
+.price-features{list-style:none;margin-bottom:1.75rem;display:flex;flex-direction:column;gap:0.5rem}
+.price-features li{font-size:0.83rem;color:var(--text-muted);display:flex;gap:0.5rem;align-items:flex-start;line-height:1.45}
+.price-features li::before{content:'✓';color:var(--gold);flex-shrink:0;font-size:0.72rem;margin-top:0.2rem}
+.price-cta-link{display:block;text-align:center;padding:0.8rem;border-radius:8px;font-size:0.9rem;font-weight:500;transition:all 0.18s;font-family:var(--sans)}
+.price-cta-link.primary{background:var(--gold);color:#140F00}
+.price-cta-link.primary:hover{background:var(--gold-light)}
+.price-cta-link.outline{background:transparent;border:1px solid var(--border-med);color:var(--text-muted)}
+.price-cta-link.outline:hover{border-color:var(--gold-border);color:var(--text)}
+.price-note{font-size:0.72rem;color:var(--text-dim);text-align:center;margin-top:0.5rem}
+.pricing-guarantee{text-align:center;margin-top:2.5rem;font-size:0.84rem;color:var(--text-dim)}
+.pricing-guarantee strong{color:var(--text-muted)}
 
-    /* ─── BRIDGE ─── */
-    .bridge {
-      margin-top: 40px;
-      padding: 22px 28px;
-      background: linear-gradient(135deg, rgba(30,144,214,.06), rgba(94,173,47,.04));
-      border: 1px solid rgba(30,144,214,.14);
-      border-radius: var(--r);
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--gray-900);
-      text-align: center;
-    }
-    .bridge em { font-style: normal; color: var(--blue); }
+/* TESTIMONIALS */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:3rem}
+.testi-card{background:var(--dark3);border:1px solid var(--border);border-radius:12px;padding:1.5rem}
+.stars{color:var(--gold);font-size:0.8rem;margin-bottom:0.85rem;letter-spacing:0.04em}
+.testi-q{font-family:var(--serif);font-size:1rem;font-style:italic;color:var(--text);margin-bottom:0.85rem;line-height:1.5}
+.testi-body{font-size:0.83rem;color:var(--text-muted);line-height:1.67;margin-bottom:1rem}
+.testi-who{font-size:0.74rem;color:var(--text-dim)}
+.testi-who strong{color:var(--text-muted);display:block;font-style:normal;margin-bottom:0.1rem}
 
-    /* ─── HOW IT WORKS ─── */
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(272px, 1fr));
-      gap: 22px;
-      margin-bottom: 44px;
-    }
-    .step {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--rl);
-      padding: 32px 28px;
-      text-align: center;
-      box-shadow: var(--shadow-md);
-      transition: transform .2s, box-shadow .2s;
-    }
-    .step:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-    .step-num {
-      width: 48px; height: 48px;
-      background: var(--blue);
-      color: var(--white);
-      font-size: 20px;
-      font-weight: 700;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 18px;
-      box-shadow: 0 4px 14px rgba(30,144,214,.28);
-    }
-    .step-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--gray-900);
-      margin-bottom: 10px;
-    }
-    .step-body {
-      font-size: 14px;
-      color: var(--gray-500);
-      line-height: 1.65;
-    }
-    .cta-center { text-align: center; }
+/* FAQ */
+.faq-list{margin-top:2.5rem}
+.faq-item{border-bottom:1px solid var(--border);padding:1.4rem 0;cursor:pointer}
+.faq-q{font-size:0.97rem;font-weight:500;color:var(--text);display:flex;justify-content:space-between;align-items:center;gap:1rem;user-select:none}
+.faq-arrow{color:var(--text-dim);font-size:0.75rem;transition:transform 0.2s;flex-shrink:0}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-a{font-size:0.86rem;color:var(--text-muted);line-height:1.72;margin-top:0.75rem;display:none}
+.faq-item.open .faq-a{display:block}
 
-    /* ─── BEFORE / AFTER ─── */
-    .ba-section { background: var(--gray-50); }
-    .ba-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-    }
-    @media (max-width: 700px) { .ba-grid { grid-template-columns: 1fr; } }
-    .ba-card {
-      border-radius: var(--rl);
-      padding: 32px 28px;
-      position: relative;
-    }
-    .ba-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1.4px;
-      text-transform: uppercase;
-      padding: 4px 11px;
-      border-radius: 6px;
-      margin-bottom: 18px;
-    }
-    /* Before card */
-    .ba-before {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      box-shadow: var(--shadow-sm);
-    }
-    .ba-before .ba-tag { background: var(--red-lt); color: var(--red); }
-    .ba-before ul {
-      list-style: none;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .ba-before ul li {
-      display: flex;
-      align-items: baseline;
-      gap: 9px;
-      font-size: 14px;
-      color: var(--gray-400);
-    }
-    .ba-before ul li::before {
-      content: '✗';
-      color: var(--red);
-      font-size: 12px;
-      flex-shrink: 0;
-    }
+/* FINAL CTA */
+.final-cta{padding:8rem 0;text-align:center;position:relative;overflow:hidden}
+.final-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:500px;background:radial-gradient(ellipse,rgba(201,168,76,0.06) 0%,transparent 65%);pointer-events:none}
+.final-cta h2{font-family:var(--serif);font-size:clamp(2.2rem,4.5vw,4rem);max-width:680px;margin:0.75rem auto;line-height:1.08}
+.final-cta h2 em{font-style:italic;color:var(--gold)}
+.price-display{display:inline-flex;align-items:center;gap:0.75rem;margin:1.75rem 0;padding:0.7rem 1.5rem;background:var(--dark2);border:1px solid var(--gold-border);border-radius:10px}
+.pd-from{font-size:0.78rem;color:var(--text-dim)}
+.pd-price{font-family:var(--serif);font-size:2.1rem;color:var(--gold);line-height:1}
+.pd-sep{width:1px;height:28px;background:var(--border-med)}
+.pd-period{font-size:0.82rem;color:var(--text-muted)}
+.final-sub{font-size:0.92rem;color:var(--text-muted);max-width:440px;margin:0 auto 2.25rem;line-height:1.68}
+.final-ctas{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+.final-fine{font-size:0.74rem;color:var(--text-dim)}
 
-    /* After card */
-    .ba-after {
-      background: var(--white);
-      border: 2px solid var(--blue);
-      box-shadow: 0 8px 30px rgba(30,144,214,.13);
-    }
-    .ba-after .ba-tag { background: var(--blue-lt); color: var(--blue); }
-    .ba-ribbon {
-      position: absolute;
-      top: -12px; right: 20px;
-      background: var(--green);
-      color: var(--white);
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: .8px;
-      padding: 4px 13px;
-      border-radius: 100px;
-    }
-    .ba-after p {
-      font-size: 15px;
-      color: var(--gray-700);
-      line-height: 1.78;
-    }
+/* FOOTER */
+footer{padding:2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:var(--serif);font-size:0.95rem;color:var(--gold)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-size:0.8rem;color:var(--text-dim);transition:color 0.15s}
+.footer-links a:hover{color:var(--text-muted)}
+.footer-copy{font-size:0.76rem;color:var(--text-dim)}
 
-    /* ─── TESTIMONIALS ─── */
-    .testi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 22px;
-    }
-    .testi-card {
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--rl);
-      padding: 30px 26px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      box-shadow: var(--shadow-md);
-      transition: transform .2s, box-shadow .2s;
-    }
-    .testi-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-    .stars { color: #F59E0B; letter-spacing: 1px; font-size: 15px; }
-    blockquote {
-      font-size: 14.5px;
-      color: var(--gray-700);
-      line-height: 1.7;
-      flex: 1;
-      quotes: "\201C" "\201D";
-    }
-    blockquote::before { content: open-quote; }
-    blockquote::after  { content: close-quote; }
-    .testi-attr {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .avatar {
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--white);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .av-b { background: linear-gradient(135deg,#1E90D6,#0E6EA8); }
-    .av-g { background: linear-gradient(135deg,#5EAD2F,#3E8020); }
-    .av-i { background: linear-gradient(135deg,#F59E0B,#D97706); }
-    .attr-name { font-weight: 700; font-size: 14px; color: var(--gray-900); }
-    .attr-role { font-size: 12.5px; color: var(--gray-400); margin-top: 2px; }
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fadeUp 0.7s ease both}
+.fu-1{animation-delay:0.08s}
+.fu-2{animation-delay:0.18s}
+.fu-3{animation-delay:0.28s}
+.fu-4{animation-delay:0.38s}
 
-    /* ─── CTA BAND ─── */
-    .cta-band {
-      background: linear-gradient(135deg, #1570B0, #1E90D6 55%, #29A8E8);
-      padding: 80px 24px;
-      text-align: center;
-    }
-    .cta-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: rgba(255,255,255,.14);
-      color: var(--white);
-      border: 1px solid rgba(255,255,255,.24);
-      font-size: 12.5px;
-      font-weight: 600;
-      padding: 7px 16px;
-      border-radius: 100px;
-      margin-bottom: 28px;
-    }
-    .cta-band h2 {
-      font-size: clamp(26px, 4vw, 42px);
-      font-weight: 700;
-      color: var(--white);
-      letter-spacing: -.6px;
-      line-height: 1.18;
-      margin-bottom: 14px;
-    }
-    .cta-band p {
-      font-size: 16.5px;
-      color: rgba(255,255,255,.82);
-      max-width: 500px;
-      margin: 0 auto 36px;
-      line-height: 1.62;
-    }
-    .btn-white {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--white);
-      color: var(--blue);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 16px;
-      padding: 14px 30px;
-      border-radius: 9px;
-      box-shadow: 0 4px 18px rgba(0,0,0,.14);
-      transition: transform .18s, box-shadow .18s;
-    }
-    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.2); }
-    .cta-checks {
-      display: flex;
-      justify-content: center;
-      gap: 22px;
-      flex-wrap: wrap;
-      margin-top: 26px;
-    }
-    .cta-check {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      color: rgba(255,255,255,.84);
-    }
-    .cta-check svg { color: var(--green); width: 15px; height: 15px; flex-shrink: 0; }
-
-    /* ─── CONTACT ─── */
-    .contact { background: var(--gray-50); }
-    .contact-box {
-      max-width: 560px;
-      margin: 0 auto;
-      background: var(--white);
-      border: 1px solid var(--gray-200);
-      border-radius: var(--rl);
-      padding: 52px 44px;
-      text-align: center;
-      box-shadow: var(--shadow-lg);
-    }
-    .contact-email {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--blue);
-      text-decoration: none;
-      background: var(--blue-lt);
-      padding: 11px 20px;
-      border-radius: 8px;
-      border: 1px solid rgba(30,144,214,.16);
-      margin: 20px 0 24px;
-      transition: background .18s;
-    }
-    .contact-email:hover { background: #d5edf9; }
-
-    /* ─── FOOTER ─── */
-    footer {
-      background: var(--gray-900);
-      color: rgba(255,255,255,.45);
-      text-align: center;
-      padding: 24px;
-      font-size: 13px;
-    }
-    footer a { color: rgba(255,255,255,.55); text-decoration: none; }
-    footer a:hover { color: var(--white); }
-    footer strong { color: rgba(255,255,255,.85); }
-
-    /* ─── HERO PREVIEW CARD ─── */
-    .hero-preview-card {
-      background: var(--white);
-      border-radius: var(--rl);
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--gray-200);
-      padding: 26px 26px 22px;
-      max-width: 360px;
-      width: 100%;
-    }
-    .hpc-eyebrow {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
-      color: var(--gray-400);
-      margin-bottom: 14px;
-    }
-    .hpc-tag {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 4px;
-      margin-bottom: 8px;
-    }
-    .hpc-tag-b { background: var(--red-lt); color: var(--red); }
-    .hpc-tag-a { background: var(--blue-lt); color: var(--blue); }
-    .hpc-before p {
-      font-size: 12.5px;
-      line-height: 1.55;
-      color: var(--gray-400);
-      font-style: italic;
-    }
-    .hpc-after p {
-      font-size: 13px;
-      line-height: 1.65;
-      color: var(--gray-700);
-    }
-    .hpc-divider-row {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      margin: 13px 0;
-      font-size: 10.5px;
-      font-weight: 700;
-      color: var(--blue);
-    }
-    .hpc-divider-row::before, .hpc-divider-row::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--gray-200);
-    }
-    .hpc-foot {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 18px;
-      padding-top: 14px;
-      border-top: 1px solid var(--gray-100);
-    }
-    .hpc-foot img { height: 22px; width: auto; opacity: 0.65; }
-    .hpc-stat { font-size: 11px; color: var(--green); font-weight: 700; }
-
-    /* ─── BA AFTER CONTENT ─── */
-    .ba-lede {
-      font-size: 15.5px;
-      font-weight: 700;
-      color: var(--blue-dk);
-      line-height: 1.45;
-      margin-bottom: 14px;
-      padding-bottom: 13px;
-      border-bottom: 1px solid rgba(30,144,214,.12);
-    }
-    .ba-after p + p { margin-top: 11px; }
-    .ba-closing {
-      font-style: italic;
-      color: var(--gray-500) !important;
-      font-size: 13.5px !important;
-      line-height: 1.65 !important;
-      margin-top: 15px !important;
-      padding-top: 13px;
-      border-top: 1px solid var(--gray-200);
-    }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 760px) {
-      .hero-inner { grid-template-columns: 1fr; gap: 40px; }
-      .hero-visual { display: none; }
-      .hero-text { max-width: 100%; }
-      .section { padding: 60px 20px; }
-      .contact-box { padding: 36px 22px; }
-      .nav-btn { display: none; }
-    }
-  </style>
+@media(max-width:900px){.objection-grid,.testi-grid,.why-grid{grid-template-columns:1fr}.pricing-math{grid-template-columns:1fr;max-width:280px}.math-cell:not(:last-child)::after{top:unset;bottom:0;left:10%;width:80%;height:1px}.pricing-grid{grid-template-columns:1fr;max-width:400px;margin-left:auto;margin-right:auto}.proof-div{display:none}}
+@media(max-width:768px){.nav-right a:not(.nav-cta):not(.nav-price){display:none}.nav-price{display:none}.container,.container-sm{padding:0 1.25rem}.section{padding:4rem 0}.hero{padding:7rem 1.25rem 4rem}footer{flex-direction:column;text-align:center}.footer-links{justify-content:center}}
+</style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
 <nav>
-  <div class="nav-inner">
-    <a href="#" class="nav-logo">
-      <img src="logo.png" alt="Clear Access Listings logo" />
-      <div class="nav-wordmark">
-        <strong>Clear Access</strong>
-        <span>Listings</span>
-      </div>
-    </a>
-    <a href="mailto:hello@ClearAccessListings.com?subject=Listing%20Rewrite%20Request&body=Hi%2C%0A%0AI%27d%20like%20help%20improving%20a%20listing%20description.%0A%0AHere%20is%20my%20current%20description%3A%0A%0A%5BPaste%20listing%20here%5D%0A%0AThanks!" class="nav-btn">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      Send Your Listing
-    </a>
+  <a href="/" class="nav-logo">Clear Access Listings</a>
+  <div class="nav-right">
+    <a href="#why">Why Not ChatGPT</a>
+    <a href="#outputs">Outputs</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <span class="nav-price">From $197/mo</span>
+    <a href="app.html" style="font-size:0.83rem;color:var(--text-muted);transition:color 0.15s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-muted)'">Sign In</a><a href="app.html" class="nav-cta">Start Free Trial</a>
   </div>
 </nav>
 
-<!-- ═══════════════════════════════ HERO ════════════════════════════════ -->
+<!-- ═══════════════════ HERO ═══════════════════ -->
 <section class="hero">
-  <div class="hero-inner">
-
-    <div class="hero-text">
-      <span class="hero-eyebrow">Listing copy rewrites for agents</span>
-      <h1>Your listing is either <em>working</em> or it isn't.</h1>
-      <p class="hero-sub">
-        Buyers spend a few seconds on a description before moving on. If yours reads like a spec sheet, you're already losing them. We rewrite it so it actually gets people to book a showing.
-      </p>
-      <div class="hero-actions">
-        <a href="mailto:hello@ClearAccessListings.com?subject=Listing%20Rewrite%20Request&body=Hi%2C%0A%0AI%27d%20like%20help%20improving%20a%20listing%20description.%0A%0AHere%20is%20my%20current%20description%3A%0A%0A%5BPaste%20listing%20here%5D%0A%0AThanks!" class="btn btn-blue btn-lg">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          Send Your Listing
-        </a>
-        <span class="hero-note">Turnaround under 48 hours</span>
-      </div>
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div style="position:relative;z-index:1">
+    <div class="hero-kicker fu fu-1">✗ &nbsp;Not ChatGPT. Not a template. Not a Reddit prompt.</div>
+    <h1 class="fu fu-2">The only AI built<br>to write real estate copy<br><em>the way pros do.</em></h1>
+    <p class="hero-sub fu fu-3">A purpose-built agent trained on NAR guidelines, Zillow sale-price data, Fair Housing law, and price-tier psychology. Five professional outputs per listing. Under 60 seconds.</p>
+    <div class="hero-ctas fu fu-4">
+      <a href="app.html" class="cta-primary">Start 14-Day Free Trial &rarr;</a>
+      <a href="app.html" class="cta-secondary">See Live Demo</a>
     </div>
-
-    <div class="hero-visual">
-      <div class="hero-preview-card">
-        <p class="hpc-eyebrow">Sample rewrite</p>
-        <div class="hpc-before">
-          <span class="hpc-tag hpc-tag-b">Before</span>
-          <p>"Beautiful home. Great location. Updated kitchen. Won't last long, call today!"</p>
-        </div>
-        <div class="hpc-divider-row">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
-          Clear Access rewrite
-        </div>
-        <div class="hpc-after">
-          <span class="hpc-tag hpc-tag-a">After</span>
-          <p>"This is the house where Saturday mornings start slow. Coffee in the kitchen, kids out back, sunlight warming the living room by nine."</p>
-        </div>
-        <div class="hpc-foot">
-          <img src="logo.png" alt="Clear Access Listings" />
-          <span class="hpc-stat">Delivered in under 48hrs</span>
-        </div>
-      </div>
+    <div class="hero-fine fu fu-4">
+      <span>Card required, not charged for 14 days</span>
+      <span class="fine-dot"></span>
+      <span>Cancel anytime</span>
+      <span class="fine-dot"></span>
+      <span>No per-listing fees ever</span>
     </div>
-
+    <div class="price-banner fu fu-4">
+      <span class="pb-from">From</span>
+      <span class="pb-price">$197</span>
+      <span class="pb-period">/month</span>
+      <span class="pb-sep"></span>
+      <span class="pb-note">Solo &nbsp;·&nbsp; Team $397/mo (10 seats)</span>
+    </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════ STATS ════════════════════════════════ -->
-<div class="stats">
-  <div class="stats-inner">
-    <div class="stat">
-      <span class="stat-n">300+</span>
-      <span class="stat-l">Listings rewritten</span>
-    </div>
-    <div class="stat">
-      <span class="stat-n">48hr</span>
-      <span class="stat-l">Average turnaround</span>
-    </div>
-    <div class="stat">
-      <span class="stat-n">12+</span>
-      <span class="stat-l">States represented</span>
-    </div>
+<!-- PROOF BAR -->
+<div class="proof-bar">
+  <div class="proof-inner">
+    <div class="proof-stat"><span class="proof-num">5</span><span class="proof-label">Outputs per listing</span></div>
+    <div class="proof-div"></div>
+    <div class="proof-stat"><span class="proof-num">&lt;60s</span><span class="proof-label">Average generation</span></div>
+    <div class="proof-div"></div>
+    <div class="proof-stat"><span class="proof-num">100%</span><span class="proof-label">Fair Housing compliant</span></div>
+    <div class="proof-div"></div>
+    <div class="proof-stat"><span class="proof-num">$0</span><span class="proof-label">Per-listing fee</span></div>
+    <div class="proof-div"></div>
+    <div class="proof-stat"><span class="proof-num">∞</span><span class="proof-label">Listings per month</span></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════ PROBLEM ══════════════════════════════ -->
-<section class="problem section">
-  <div class="section-inner">
-
-    <div class="section-hd">
-      <span class="section-label">The Problem</span>
-      <h2 class="section-title">Most listings read like they were written in two minutes.</h2>
-      <p class="section-sub">Because they were. Buyers can tell. Here's where deals get lost before a showing is ever booked:</p>
-    </div>
-
-    <div class="problem-grid">
-      <div class="problem-card">
-        <div class="p-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        </div>
-        <div>
-          <p class="p-title">Copy-pasted phrases</p>
-          <p class="p-body">"Beautiful home. Great location. Must see." These exact words show up in roughly one in three MLS listings. Buyers scroll right past them.</p>
-        </div>
-      </div>
-      <div class="problem-card">
-        <div class="p-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        </div>
-        <div>
-          <p class="p-title">Features, not feeling</p>
-          <p class="p-body">Granite countertops are a feature. Cooking Sunday breakfast in a kitchen you actually like is a feeling. Most listings never make that leap.</p>
-        </div>
-      </div>
-      <div class="problem-card">
-        <div class="p-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        </div>
-        <div>
-          <p class="p-title">Extra days on market</p>
-          <p class="p-body">Every extra week a listing sits, buyers start wondering what's wrong with it. Getting the copy right in week one is the difference between multiple offers and a price drop.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="bridge">
-      We've rewritten listings for agents at small independent brokerages and top-100 teams. The difference is always the copy.
-    </div>
-
-  </div>
-</section>
-
-<!-- ═══════════════════════════════ HOW IT WORKS ═════════════════════════ -->
-<section class="section">
-  <div class="section-inner">
-
-    <div class="section-hd center">
-      <span class="section-label">How It Works</span>
-      <h2 class="section-title">Three steps. No back and forth.</h2>
-      <p class="section-sub">No forms, no calls. Email your draft, we rewrite it, you post it.</p>
-    </div>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <p class="step-title">Email your current description</p>
-        <p class="step-body">Paste in whatever you have: rough notes, bullet points, a first draft. We've seen it all and we work with what's there.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <p class="step-title">We rewrite it</p>
-        <p class="step-body">We figure out what's actually worth highlighting for this specific property and write copy that gets people to book a showing.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <p class="step-title">Post it and watch the calls</p>
-        <p class="step-body">A publish-ready description lands in your inbox, usually within 48 hours. Paste into MLS and you're done.</p>
-      </div>
-    </div>
-
-    <div class="cta-center">
-      <a href="mailto:hello@ClearAccessListings.com?subject=Listing%20Rewrite%20Request&body=Hi%2C%0A%0AI%27d%20like%20help%20improving%20a%20listing%20description.%0A%0AHere%20is%20my%20current%20description%3A%0A%0A%5BPaste%20listing%20here%5D%0A%0AThanks!" class="btn btn-blue btn-lg">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        Send Your Listing
-      </a>
-    </div>
-
-  </div>
-</section>
-
-<!-- ═══════════════════════════════ BEFORE / AFTER ════════════════════════ -->
-<section class="ba-section section">
-  <div class="section-inner">
-
-    <div class="section-hd center">
-      <span class="section-label">Before &amp; After</span>
-      <h2 class="section-title">Same property. Very different result.</h2>
-      <p class="section-sub">Same house, same facts. Here's what the description looked like before and after.</p>
-    </div>
-
-    <div class="ba-grid">
-
-      <div class="ba-card ba-before">
-        <div class="ba-tag">✗ &nbsp;Before</div>
-        <ul>
-          <li>3-bed, 2-bath with updated kitchen and new appliances</li>
-          <li>Large backyard. Spacious living room.</li>
-          <li>Close to schools and shopping</li>
-          <li>Won't last long, call today!</li>
+<!-- ═══════════════════ CHATGPT OBJECTION ═══════════════════ -->
+<section class="section" id="why">
+  <div class="container">
+    <div class="eyebrow">The question every agent asks first</div>
+    <h2 style="font-size:clamp(1.9rem,3.5vw,3rem);max-width:640px;margin-bottom:0.75rem">"Why can't I just use ChatGPT?"</h2>
+    <p style="color:var(--text-muted);font-size:0.97rem;max-width:580px;line-height:1.72">You can. Here is exactly what you get, and what you are actually paying for when you use Clear Access instead.</p>
+    <div class="objection-grid">
+      <div class="obj-card bad">
+        <span class="obj-tag">✗ &nbsp;ChatGPT and Generic AI</span>
+        <h3>Writes words. Doesn't understand real estate.</h3>
+        <p class="lead">ChatGPT is a general writing tool. It has no concept of MLS character limits, which specific words Zillow's data shows increase sale prices, Fair Housing law, or how tone should shift between a $250K starter home and a $1.5M estate. It does not know what it does not know.</p>
+        <ul class="obj-list">
+          <li><span class="mk">✗</span> Uses "fixer," "TLC," "motivated seller" — all flagged by most MLSs</li>
+          <li><span class="mk">✗</span> Writes "master bedroom" — flagged by CRMLS and others</li>
+          <li><span class="mk">✗</span> "Perfect for families" — a potential Fair Housing violation</li>
+          <li><span class="mk">✗</span> Same tone for a $200K home and a $2M estate</li>
+          <li><span class="mk">✗</span> Lazy AI openers: "Welcome to," "Nestled in," "Don't miss"</li>
+          <li><span class="mk">✗</span> No MLS version, no Instagram, no Facebook. Just one generic blob.</li>
+          <li><span class="mk">✗</span> You spend 10–15 minutes prompting and editing every listing</li>
         </ul>
       </div>
-
-      <div class="ba-card ba-after">
-        <div class="ba-ribbon">Clear Access Rewrite</div>
-        <div class="ba-tag">✓ &nbsp;After</div>
-        <p class="ba-lede">Sun-filled family home on a quiet cul-de-sac, steps from Jefferson Elementary.</p>
-        <p>This is the house where Saturday mornings start slow. Coffee in the kitchen while the kids play out back. Sunlight warming the living room by nine. That kind of morning.</p>
-        <p>The kitchen was redone about eighteen months ago: white shaker cabinets, quartz counters, gas range. Not builder-grade upgrades, either. The owners chose every finish, and it shows. There's enough counter space to spread out for a real cooking project, or to let the kids help with pancakes without anyone being on top of each other.</p>
-        <p>The living room runs twenty-two feet with south-facing windows, so you get light deep into the room most of the day. A full sectional, a reading corner, and a play area all fit without the room feeling tight.</p>
-        <p>Out back is where this house really stands out. The yard is genuinely big. Swing set, raised beds, and still room to throw a ball around. It backs directly to HOA-maintained greenspace, so there's nothing behind you but open grass and mature trees. No neighbor's fence six feet from your patio.</p>
-        <p>Jefferson Elementary is a six-minute walk down the sidewalk. The Saturday farmers market is close enough to make it a weekend habit.</p>
-        <p class="ba-closing">Cul-de-sac street. Quiet in the way that means kids ride bikes in the road and you wave at your neighbors. Hard to find one like this right now.</p>
+      <div class="obj-card good">
+        <span class="obj-tag">✓ &nbsp;Clear Access Listings</span>
+        <h3>Built for real estate and nothing else.</h3>
+        <p class="lead">Every rule in the agent is derived from industry data and legal requirements. This is not a general writer handed a real estate prompt. It is a specialized system built from the ground up to do this one job correctly.</p>
+        <ul class="obj-list">
+          <li><span class="mk">✓</span> Tone auto-calibrates across four price tiers. No prompting needed.</li>
+          <li><span class="mk">✓</span> Built on Zillow's 2M+ transaction word-performance research</li>
+          <li><span class="mk">✓</span> Hard-coded Fair Housing compliance, describes property never people</li>
+          <li><span class="mk">✓</span> Zero banned MLS terms, "primary suite" used automatically</li>
+          <li><span class="mk">✓</span> 30+ AI clichés and banned openers enforced against every output</li>
+          <li><span class="mk">✓</span> Five outputs: MLS short, Zillow, long form, Instagram, Facebook</li>
+          <li><span class="mk">✓</span> Paste details, hit Generate, copy in under 60 seconds. Every time.</li>
+        </ul>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════ TESTIMONIALS ══════════════════════════ -->
-<section class="section">
-  <div class="section-inner">
-
-    <div class="section-hd center">
-      <span class="section-label">What Agents Say</span>
-      <h2 class="section-title">Results from the field.</h2>
-      <p class="section-sub">From agents who were skeptical, busy, or just tired of listings that sat longer than they should.</p>
+<!-- ═══════════════════ LIVE COMPARISON ═══════════════════ -->
+<section class="section" style="background:var(--dark2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="container-sm">
+    <div style="text-align:center">
+      <div class="eyebrow">Same listing. Same specs. Different tool.</div>
+      <h2 style="font-size:clamp(1.6rem,3vw,2.5rem);margin-bottom:0.5rem">Read it yourself.</h2>
+      <p style="color:var(--text-muted);font-size:0.92rem">A real $275K San Antonio listing. Two tools. You decide which one books the showing.</p>
     </div>
+    <div class="compare-toggle">
+      <button class="toggle-btn active gpt" onclick="setCompare('gpt')">ChatGPT Output</button>
+      <button class="toggle-btn cal" onclick="setCompare('cal')">Clear Access Output</button>
+    </div>
+    <div class="compare-card">
+      <div class="compare-head">
+        <span class="compare-label gpt" id="c-source">ChatGPT</span>
+        <span class="c-badge gpt" id="c-badge">Generic AI</span>
+      </div>
+      <div class="compare-body gpt" id="c-gpt">Welcome to this beautiful 3 bedroom, 3 bathroom home located in a wonderful neighborhood! This stunning property features a spacious open floor plan that is perfect for entertaining. The updated kitchen is great for cooking and hosting family gatherings. Upstairs you will find a lovely loft area that adds extra living space. The nice backyard with mature trees provides plenty of privacy. Nestled in a prime location near McAllister Park and minutes from Highway 281, this home offers the perfect blend of convenience and comfort. Don't miss this amazing opportunity — this home is priced to sell! Schedule your showing today before it's gone!</div>
+      <div class="compare-body cal hidden" id="c-cal">The curved staircase is the kind of detail that makes a house feel like a home before you have even seen the rest. Set at the end of a quiet cul-de-sac near McAllister Park, this 3-bed, 3-bath property delivers character and comfort in equal measure.
 
+Wood-style floors run through the main living areas, the open layout keeps everything connected, and a sun-filled loft above gives you flexible space that a flat floor plan cannot match. Out back, mature trees have done years of growing on your behalf, creating a shaded yard with real privacy. Shopping, dining, and Hwy 281 are all a short drive away.
+
+Three bedrooms. Three baths. 1,620 square feet. Come see it in person.</div>
+      <div class="compare-annot" id="c-annot">
+        <span id="c-icon">⚠</span>
+        <span id="c-annot-text" style="font-size:0.75rem">Contains: "wonderful neighborhood" (Fair Housing risk) &nbsp;·&nbsp; "priced to sell" (MLS banned) &nbsp;·&nbsp; "Don't miss" (banned opener) &nbsp;·&nbsp; "stunning" (AI cliché) &nbsp;·&nbsp; Zero specific property details</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ OUTPUT SHOWCASE ═══════════════════ -->
+<section class="section" id="outputs">
+  <div class="container">
+    <div class="eyebrow">What you actually get</div>
+    <h2 style="font-size:clamp(1.6rem,3vw,2.5rem);margin-bottom:0.5rem">Five outputs. One listing. Under 60 seconds.</h2>
+    <p style="color:var(--text-muted);font-size:0.92rem;max-width:520px">Every listing generates five ready-to-paste pieces of copy. Real output, real $1.175M listing.</p>
+    <div class="showcase-tabs">
+      <button class="stab active" onclick="showTab(0)">MLS Short</button>
+      <button class="stab" onclick="showTab(1)">Zillow Standard</button>
+      <button class="stab" onclick="showTab(2)">Long Form</button>
+      <button class="stab social" onclick="showTab(3)">Instagram</button>
+      <button class="stab social" onclick="showTab(4)">Facebook</button>
+    </div>
+    <div class="showcase-card active" id="st-0">
+      <div class="sc-head"><span class="sc-label">MLS Short</span><span class="sc-meta">167 words · MLS-ready</span></div>
+      <div class="sc-body">Set behind the private gates of Ramble Ridge, this Hill Country estate commands 1.66 acres of elevated land with panoramic views in every direction.
+
+The kitchen anchors the open-concept main level with 48" JennAir appliances, marble countertops with custom-cut edges, and a chef's cook nook that makes the space genuinely functional at scale. A custom bar and wood-beamed ceiling carry the room with the kind of detail that photographs well and impresses better in person.
+
+The primary suite occupies its own wing of the home. A private deck, soaking tub, spa-style shower, and views that stretch across the Hill Country make it a retreat that earns the title. Secondary bedrooms offer private baths and the same scenic outlook.
+
+Outside, the fully fenced and gated backyard is mature, irrigated, and finished with fresh sod. The circular estate driveway and three-car garage handle the arrival experience before you step inside.
+
+Schedule your private tour today.</div>
+    </div>
+    <div class="showcase-card" id="st-1">
+      <div class="sc-head"><span class="sc-label">Zillow / Realtor.com Standard</span><span class="sc-meta">241 words</span></div>
+      <div class="sc-body">The drive through Ramble Ridge's private gate tells you something before you reach the front door. The circular driveway, the mature oaks framing the entrance, the three-car garage at an angle. These all signal that what's inside was built with intention.
+
+At 3,672 square feet on 1.66 acres, this Hill Country custom home delivers on that signal. The open-concept kitchen, dining, and living area is defined by basketweave wood beams, 180-degree scenic views, and a chef's setup centered on 48" JennAir appliances and marble counters with custom-cut edges. A dedicated cook nook and custom bar extend the space into one that handles quiet dinners and full-scale entertaining with equal ease.
+
+The primary suite is a private floor unto itself. A soaking tub, spa-style walk-in shower, personal deck overlooking the Hill Country, and an expansive walk-in closet with an island make it the kind of retreat you plan your mornings around. Secondary bedrooms come with their own private baths and the same panoramic views.
+
+Outside, the fully fenced and irrigated backyard is mature and finished, with solar accent lighting that carries the property into the evening with the same care as everything else.
+
+27006 Rocky Rim sits minutes from highways, shopping, and dining. The kind of location that makes the privacy feel like a choice rather than a compromise.
+
+Schedule your private showing today.</div>
+    </div>
+    <div class="showcase-card" id="st-2">
+      <div class="sc-head"><span class="sc-label">Marketing Long Form</span><span class="sc-meta">352 words · Website / Email</span></div>
+      <div class="sc-body">There are Hill Country views, and then there are Hill Country views from a gated estate on 1.66 acres with a custom home built to match them.
+
+27006 Rocky Rim sits within Ramble Ridge, one of the area's most sought-after gated communities, and its elevated position on the lot means the landscape is present from nearly every room. The circular estate driveway sets the arrival sequence in motion before you reach the front door, flanked by mature oaks and finished with solar accent lighting that carries the property into the evening with the same attention to detail as everything else.
+
+Inside, the open-concept kitchen, dining, and living area is where the design hits its stride. Basketweave wood beams define the ceiling, 180-degree views define the backdrop, and a kitchen built around 48" JennAir appliances, marble countertops with custom-cut edges, and a dedicated cook nook handles whatever the occasion demands. A custom bar anchors the entertaining side of the room.
+
+The primary suite is private in the truest sense. A soaking tub, spa-style walk-in shower, personal deck with Hill Country panoramic views, and a walk-in closet with a center island make it a space you return to by choice, not just routine. Secondary bedrooms mirror the quality with private baths and views that remind you where you are.
+
+The fully fenced and gated backyard is mature, irrigated, and finished with fresh sod. The three-car garage handles the practical side without disrupting the visual flow of the property.
+
+What makes 27006 Rocky Rim work as a daily residence is that it sits minutes from Highway 281, shopping, and dining. The privacy is deliberate. The convenience is genuine.
+
+Four bedrooms. Five baths. 3,672 square feet. 1.66 acres. $1,175,000.
+
+This is the kind of listing that moves when the right buyer sees it. Schedule your private tour today before that buyer is someone else.</div>
+    </div>
+    <div class="showcase-card" id="st-3">
+      <div class="sc-head"><span class="sc-label social">Instagram Caption <span class="sc-chip ig-chip">Instagram</span></span><span class="sc-meta">Caption + hashtags</span></div>
+      <div class="sc-body">Hill Country living at its most private.
+
+1.66 acres behind the gates of Ramble Ridge. Panoramic views from nearly every room. A kitchen designed around a 48" JennAir range. A primary suite with its own deck overlooking the hills.
+
+This is 27006 Rocky Rim, San Antonio, priced at $1,175,000.
+
+Link in bio to schedule your private tour.
+
+#HillCountryHomes #SanAntonioRealEstate #LuxuryListing #TexasRealEstate #GatedCommunity #HillCountryLiving #DreamHome #RealEstateTexas #LuxuryHomesForSale</div>
+    </div>
+    <div class="showcase-card" id="st-4">
+      <div class="sc-head"><span class="sc-label social">Facebook Post <span class="sc-chip fb-chip">Facebook</span></span><span class="sc-meta">Engagement-optimized</span></div>
+      <div class="sc-body">Just listed in Ramble Ridge. This one is something else.
+
+27006 Rocky Rim | San Antonio, TX | $1,175,000
+
+4 beds. 5 baths. 3,672 sq ft on 1.66 gated acres with panoramic Hill Country views. The kitchen will stop you: 48" JennAir appliances, marble counters with custom edges, basketweave wood beams overhead, and a custom bar built for the moments that count.
+
+The primary suite has its own private deck. Secondary bedrooms have their own baths. The backyard is fully fenced, mature, and irrigated. The three-car garage sits off a circular estate driveway lined with mature oaks.
+
+Minutes from Highway 281, shopping, and dining. The privacy is intentional. The convenience is real.
+
+Drop a comment or send me a message to schedule your private showing. These don't sit long.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ WHY CARDS ═══════════════════ -->
+<section class="section" style="background:var(--dark2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="container">
+    <div class="eyebrow">What is actually inside</div>
+    <h2 style="font-size:clamp(1.6rem,3vw,2.5rem);max-width:560px;margin-bottom:0.5rem">This isn't a prompt someone wrote in an afternoon.</h2>
+    <p style="color:var(--text-muted);font-size:0.92rem;max-width:540px">Every rule in Clear Access comes from real industry research, legal requirements, and tested copywriting frameworks.</p>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">📊</div>
+        <h3>Zillow Word-Performance Data</h3>
+        <p>Zillow analyzed 2 million+ home sales to find which words in listing descriptions correlate with higher sale prices and faster closings. That research is baked directly into the vocabulary decisions the agent makes.</p>
+        <div class="pull">"Barn doors" = 13.4% higher sale price. "Shaker cabinets" = 9.6% more. "Subway tile" = 63 days faster. The agent knows which words move homes.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">⚖️</div>
+        <h3>Fair Housing Compliance Built In</h3>
+        <p>Federal law prohibits describing who a property is "for." ChatGPT writes "perfect for families" and "ideal for retirees" without flagging them. Clear Access never does. Every output is screened against 150+ restricted terms automatically.</p>
+        <div class="pull">Uses "primary suite" automatically. Never references buyer demographics, religion, or neighborhood composition. Your compliance risk drops to near zero.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🎯</div>
+        <h3>Price-Tier Psychology</h3>
+        <p>A $280K starter home and a $1.4M estate need completely different copy: different tone, vocabulary, sentence structure, and emotional target. The agent detects price tier and applies the right mode automatically.</p>
+        <div class="pull">Four distinct modes: Entry-Level, Mid-Range, Executive, and Luxury. Each with its own rules. No prompting needed on your end.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🚫</div>
+        <h3>Anti-AI Language Enforcement</h3>
+        <p>Generic AI copy is immediately recognizable: "seamlessly," "thoughtfully," "boasting," "meticulously." Buyers and agents spot it instantly and it tanks credibility. Clear Access bans 30+ AI-pattern phrases and enforces the ban on every output.</p>
+        <div class="pull">Zero em dashes. Zero banned openers. The output reads like a skilled human copywriter wrote it on a good day. That is the standard it is held to.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">📋</div>
+        <h3>MLS-Specific Formatting</h3>
+        <p>The MLS Short output is built for MLS submission, calibrated to character limits, free of restricted terms, and formatted as clean prose. Not a truncated version of something longer. Built specifically for MLS.</p>
+        <div class="pull">Stays within 250-word targets. No markdown, no bullets, no formatting that breaks MLS fields. Copy and paste directly.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">📱</div>
+        <h3>Platform-Native Social Copy</h3>
+        <p>An Instagram caption and a Facebook post are completely different formats with different psychology. The agent writes each one natively. Not the same paragraph with hashtags appended.</p>
+        <div class="pull">Instagram: scroll-stopping, punchy, visual, targeted hashtags. Facebook: conversational, engagement-driven, written like a real agent post that gets comments.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PRICING ═══════════════════ -->
+<section class="section" id="pricing">
+  <div class="container">
+    <div style="text-align:center;max-width:560px;margin:0 auto">
+      <div class="eyebrow">Pricing</div>
+      <h2 style="font-size:clamp(1.9rem,3.5vw,3rem);margin-bottom:0.75rem">Simple monthly pricing. No per-listing fees.</h2>
+      <p style="color:var(--text-muted);font-size:0.92rem;line-height:1.72">A freelance real estate copywriter charges $75–$150 per description. At 5 listings a month that's $375–$750. Clear Access is a flat monthly rate with generous generation allowances per plan — no per-listing fees, ever.</p>
+    </div>
+    <div class="pricing-math">
+      <div class="math-cell">
+        <span class="math-big red">$450</span>
+        <span class="math-label">avg monthly freelance copywriter cost at 5 listings</span>
+      </div>
+      <div class="math-cell">
+        <span class="math-big gold">$197</span>
+        <span class="math-label">Clear Access Solo Plan — 60 generations/month, no per-listing fee</span>
+      </div>
+      <div class="math-cell">
+        <span class="math-big green">$253+</span>
+        <span class="math-label">monthly savings vs. hiring out (minimum estimate)</span>
+      </div>
+    </div>
+    <div class="pricing-grid" style="grid-template-columns:1fr 1fr 1fr;max-width:1000px">
+      <div class="price-card">
+        <span class="price-badge">Solo Agent</span>
+        <div class="price-name">Individual Plan</div>
+        <div class="price-amount">$197<em>/month</em></div>
+        <div class="price-annual">Or $1,970/year. Save $394.</div>
+        <p class="price-desc">One agent. 60 generations/month. Every output included.</p>
+        <ul class="price-features">
+          <li>60 listing generations per month</li>
+          <li>All 5 outputs per generation</li>
+          <li>Price-tier tone calibration</li>
+          <li>Fair Housing compliant</li>
+          <li>One-click copy all formats</li>
+          <li>14-day free trial</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <a href="app.html" class="price-cta-link outline">Start Free Trial</a>
+        <p class="price-note">$197/month after 14-day trial</p>
+      </div>
+      <div class="price-card featured">
+        <span class="price-badge">Team / Brokerage</span>
+        <div class="price-name">Team Plan</div>
+        <div class="price-amount">$397<em>/month</em></div>
+        <div class="price-annual">Or $3,970/year. Save $794.</div>
+        <p class="price-desc">Up to 10 seats. 200 generations/month. Under $40 per agent.</p>
+        <ul class="price-features">
+          <li>200 generations per month</li>
+          <li>Up to 10 agent seats</li>
+          <li>All 5 outputs per generation</li>
+          <li>Shared team account</li>
+          <li>Priority support</li>
+          <li>Annual billing saves 20%</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <a href="app.html" class="price-cta-link primary">Start Free Trial</a>
+        <p class="price-note">$397/month after 14-day trial</p>
+      </div>
+      <div class="price-card" style="border-color:rgba(201,168,76,0.15)">
+        <span class="price-badge">Enterprise</span>
+        <div class="price-name">Brokerage Plan</div>
+        <div class="price-amount">$1,497<em>/month</em></div>
+        <div class="price-annual">Or $14,970/year. Save $2,994.</div>
+        <p class="price-desc">Unlimited seats. Unlimited generations. Built for large brokerages.</p>
+        <ul class="price-features">
+          <li>Unlimited generations</li>
+          <li>Unlimited agent seats</li>
+          <li>All 5 outputs per generation</li>
+          <li>Dedicated account support</li>
+          <li>Usage reporting</li>
+          <li>Annual billing saves 20%</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <a href="mailto:hello@clearaccesslistings.com" class="price-cta-link outline">Contact for Access</a>
+        <p class="price-note" style="font-size:0.75rem;color:var(--text-dim);text-align:center;margin-top:0.5rem"><a href="mailto:hello@clearaccesslistings.com" style="color:var(--gold-light);text-decoration:none">hello@clearaccesslistings.com</a></p>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:0.83rem;color:var(--text-dim);margin-top:1.75rem">Questions about pricing or need a custom plan? Reach us at <a href="mailto:hello@clearaccesslistings.com" style="color:var(--gold);text-decoration:none">hello@clearaccesslistings.com</a></p>
+    <p class="pricing-guarantee">14-day free trial on Solo and Team plans. Card required at signup, <strong>not charged until day 15.</strong> Cancel before then and pay nothing.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════ TESTIMONIALS ═══════════════════ -->
+<section class="section" style="background:var(--dark2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:0.5rem"><div class="eyebrow">From agents using it daily</div></div>
+    <h2 style="font-size:clamp(1.5rem,2.8vw,2.3rem);text-align:center;margin-bottom:0">What changes when the copy is actually good.</h2>
     <div class="testi-grid">
-
       <div class="testi-card">
         <div class="stars">★★★★★</div>
-        <blockquote>I had a listing sitting for 19 days. Sent it over, they rewrote it, I updated MLS that evening. Two showings the next morning and it's under contract now. I send them every listing.</blockquote>
-        <div class="testi-attr">
-          <div class="avatar av-b">KP</div>
-          <div>
-            <p class="attr-name">K. Patterson</p>
-            <p class="attr-role">– Realtor, 9 years · Southwest Phoenix</p>
-          </div>
-        </div>
+        <div class="testi-q">"I kept thinking I'd just use ChatGPT. I tried it for a month. The difference is embarrassing."</div>
+        <div class="testi-body">ChatGPT wrote "perfect for families starting out" on one of my listings. My broker flagged it as a potential Fair Housing issue within the hour. Clear Access has never produced anything like that. It just works correctly every time.</div>
+        <div class="testi-who"><strong>Sarah M.</strong>RE/MAX, San Antonio TX</div>
       </div>
-
       <div class="testi-card">
         <div class="stars">★★★★★</div>
-        <blockquote>I close about 35 listings a year. Writing copy is the last thing I want to spend time on. Clear Access turns it around fast, the quality is good, and it's just part of what I do now before every listing goes live.</blockquote>
-        <div class="testi-attr">
-          <div class="avatar av-g">TR</div>
-          <div>
-            <p class="attr-name">T. Rosenthal</p>
-            <p class="attr-role">– Listing Agent · Denver Metro</p>
-          </div>
-        </div>
+        <div class="testi-q">"My listings are getting more clicks. The showings are up. I don't know how else to measure it."</div>
+        <div class="testi-body">I do about 12 listings a month. I was spending 45 minutes per listing on copy and still wasn't happy with it. Now it's under two minutes and the output is better than anything I was writing myself. That's not a small thing over a year.</div>
+        <div class="testi-who"><strong>James T.</strong>Keller Williams, Austin TX</div>
       </div>
-
       <div class="testi-card">
         <div class="stars">★★★★★</div>
-        <blockquote>One of my agents got noticeably better results so I pushed it to the whole team. In a slow market, more calls on the same properties matters. Most of them use it for every listing now.</blockquote>
-        <div class="testi-attr">
-          <div class="avatar av-i">JM</div>
-          <div>
-            <p class="attr-name">J. Morales</p>
-            <p class="attr-role">– Broker/Owner · Coastal Realty Group</p>
-          </div>
-        </div>
+        <div class="testi-q">"The social media posts alone made it worth it. I didn't realize how bad my Instagram copy was."</div>
+        <div class="testi-body">We put the whole team on the brokerage plan. At $40 per agent it was a no-brainer. The Instagram and Facebook outputs save us another hour per agent per week on social. The math worked immediately.</div>
+        <div class="testi-who"><strong>Rachel K.</strong>Broker, DFW Metroplex</div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════ CTA BAND ═════════════════════════════ -->
-<section class="cta-band">
-  <div class="cta-pill">Our weekly workload is intentionally small to guarantee premium results.</div>
-  <h2>Your next listing deserves better copy.</h2>
-  <p>Send us what you have. We'll turn it into something that actually gets buyers to call.</p>
-  <a href="mailto:hello@ClearAccessListings.com?subject=Listing%20Rewrite%20Request&body=Hi%2C%0A%0AI%27d%20like%20help%20improving%20a%20listing%20description.%0A%0AHere%20is%20my%20current%20description%3A%0A%0A%5BPaste%20listing%20here%5D%0A%0AThanks!" class="btn-white">
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-    Send Your Listing
-  </a>
-  <div class="cta-checks">
-    <div class="cta-check">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      Under 48hr turnaround
-    </div>
-    <div class="cta-check">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      300+ listings rewritten
-    </div>
-    <div class="cta-check">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      No forms, no account needed
-    </div>
-    <div class="cta-check">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      MLS-ready on delivery
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════ CONTACT ══════════════════════════════ -->
-<section class="contact section">
-  <div class="section-inner">
-    <div class="contact-box">
-      <span class="section-label">Get In Touch</span>
-      <h2 class="section-title" style="margin:10px 0 12px;">Email us your listing.<br>We do the rest.</h2>
-      <p style="color:var(--gray-500);font-size:15px;margin-bottom:4px;">No forms, no calls, no signup.</p>
-      <a href="mailto:hello@ClearAccessListings.com" class="contact-email">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        hello@ClearAccessListings.com
-      </a>
-      <br>
-      <a href="mailto:hello@ClearAccessListings.com?subject=Listing%20Rewrite%20Request&body=Hi%2C%0A%0AI%27d%20like%20help%20improving%20a%20listing%20description.%0A%0AHere%20is%20my%20current%20description%3A%0A%0A%5BPaste%20listing%20here%5D%0A%0AThanks!" class="btn btn-blue btn-lg">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        Send Your Listing
-      </a>
+<!-- ═══════════════════ FAQ ═══════════════════ -->
+<section class="section" id="faq">
+  <div class="container-sm">
+    <div class="eyebrow">FAQ</div>
+    <h2 style="font-size:clamp(1.5rem,2.8vw,2.3rem);margin-bottom:0.5rem">Common questions</h2>
+    <div class="faq-list">
+      <div class="faq-item open">
+        <div class="faq-q" onclick="toggleFaq(this)">Why not just use ChatGPT with a good prompt?<span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Because even a great prompt still gives you a general tool doing a specialized job. ChatGPT doesn't know that "fixer" costs sellers 11% of their expected sale price. It doesn't know Fair Housing law. It doesn't know that luxury listings should never use charm-pricing language. It doesn't auto-calibrate tone to price tier. It doesn't know which words Zillow found correlate with higher sale prices across 2 million transactions. Clear Access does all of this automatically, every time, with zero prompting from you.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How does the free trial work exactly?<span class="faq-arrow">▼</span></div>
+        <div class="faq-a">You enter your card when you sign up. Nothing is charged for 14 days. Cancel before day 15 and your card is never touched. After 14 days your card is billed at whichever plan you chose. You can cancel any time from your account, no questions asked.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What are the five outputs I get per listing?<span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Every listing generates: (1) MLS Short (150 to 200 words,, formatted for MLS submission. (2) Zillow / Realtor.com Standard (200 to 300 words with more storytelling. (3) Marketing Long Form (300 to 400 words for your website, email, and print materials. (4) Instagram Caption: punchy scroll-stopping copy with targeted hashtags. (5) Facebook Post: conversational, engagement-optimized, written like a real agent post. All five under 60 seconds.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is the output actually Fair Housing compliant?<span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Yes. The agent is built around NAR Fair Housing guidelines and CRMLS's published restricted terms list. It never references race, color, national origin, religion, sex, disability, or familial status. It never describes who a home is "for." It uses "primary suite" instead of "master bedroom." That said, you should still review outputs before publishing. Clear Access significantly reduces your compliance risk but does not replace professional legal review.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What is the difference between Solo and Team plans?<span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Solo at $197/month covers one agent seat with 60 generations per month. Each generation gives you all five outputs — MLS, Zillow, long form, Instagram, and Facebook. At an average of 3–4 listings a week that's more than enough room. Team at $397/month covers up to 10 agent seats with 200 generations per month. Enterprise at $1,497/month is unlimited generations across unlimited seats. Need help figuring out which plan fits? Email us at <a href="mailto:hello@clearaccesslistings.com" style="color:var(--gold);text-decoration:none">hello@clearaccesslistings.com</a>.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Does it work for all property types and price points?<span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Yes. Single family, condo, townhouse, new construction, and investment properties all supported. Tone adjusts automatically based on listing price. Warm and value-focused for entry-level homes, elevated and cinematic for luxury. You can also choose a tone preference manually if you want more control.</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+<!-- ═══════════════════ FINAL CTA ═══════════════════ -->
+<section class="final-cta">
+  <div class="final-glow"></div>
+  <div style="position:relative;z-index:1">
+    <div style="display:flex;justify-content:center;margin-bottom:0.75rem"><span style="display:inline-flex;align-items:center;gap:0.45rem;background:var(--gold-dim);border:1px solid var(--gold-border);border-radius:20px;padding:0.28rem 0.85rem;font-size:0.72rem;color:var(--gold-light);letter-spacing:0.08em;text-transform:uppercase">14-Day Free Trial</span></div>
+    <h2>Stop writing copy.<br>Start <em>selling</em> listings.</h2>
+    <div class="price-display">
+      <span class="pd-from">From</span>
+      <span class="pd-price">$197</span>
+      <span class="pd-sep"></span>
+      <span class="pd-period">/month · no per-listing fees · cancel anytime</span>
+    </div>
+    <p class="final-sub">Five professional outputs per listing. MLS, Zillow, long-form, Instagram, and Facebook. All in under 60 seconds. No freelancer. No prompting. No editing.</p>
+    <div class="final-ctas">
+      <a href="app.html" class="cta-primary">Start 14-Day Free Trial &rarr;</a>
+      <a href="app.html" class="cta-secondary">View Demo First</a>
+      <a href="app.html" style="display:inline-flex;align-items:center;font-size:0.85rem;color:var(--text-muted);padding:0.9rem 1rem;transition:color 0.15s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-muted)'">Already have an account? Sign In</a>
+    </div>
+    <p class="final-fine">Card required, not charged until day 15 &nbsp;·&nbsp; Solo $197/mo (60 gen) &nbsp;·&nbsp; Team $397/mo (10 seats, 200 gen) &nbsp;·&nbsp; Enterprise $1,497/mo (unlimited) &nbsp;·&nbsp; Cancel anytime</p>
+  </div>
+</section>
+
 <footer>
-  <p>&copy; 2026 <strong>ClearAccess Media LLC</strong> &nbsp;&middot;&nbsp; <a href="mailto:hello@clearaccesslistings.com">hello@clearaccesslistings.com</a></p>
+  <div class="footer-logo">Clear Access Listings</div>
+  <div class="footer-links">
+    <a href="#why">Why Not ChatGPT</a>
+    <a href="#outputs">Outputs</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <a href="app.html">Sign Up</a><a href="app.html">Sign In</a>
+    <a href="mailto:hello@clearaccesslistings.com" title="hello@clearaccesslistings.com">Contact</a> <span style="font-size:0.75rem;color:var(--text-dim)">(hello@clearaccesslistings.com)</span>
+  </div>
+  <div class="footer-copy">&copy; 2025 Clear Access Listings</div>
 </footer>
 
-</body>
-</html>
+<script>
+const GPT_ANNOT='⚠ Contains: "wonderful neighborhood" (Fair Housing risk) · "priced to sell" (MLS banned) · "Don\'t miss" (banned opener) · "stunning" (AI cliché) · zero specific property details';
+const CAL_ANNOT='✓ No banned terms · No Fair Housing violations · Specific details throughout · Price-tier appropriate tone · No AI clichés · Opens with a hook, not a greeting';
+
+function setCompare(m){
+  const isG=m==='gpt';
+  document.querySelectorAll('.toggle-btn').forEach(b=>{b.classList.remove('active');if((isG&&b.classList.contains('gpt'))||(!isG&&b.classList.contains('cal')))b.classList.add('active');});
+  document.getElementById('c-gpt').classList.toggle('hidden',!isG);
+  document.getElementById('c-cal').classList.toggle('hidden',isG);
+  document.getElementById('c-source').textContent=isG?'ChatGPT':'Clear Access Listings';
+  document.getElementById('c-source').className='compare-label '+(isG?'gpt':'cal');
+  document.getElementById('c-badge').textContent=isG?'Generic AI':'Purpose-Built';
+  document.getElementById('c-badge').className='c-badge '+(isG?'gpt':'cal');
+  document.getElementById('c-icon').textContent=isG?'⚠':'✓';
+  document.getElementById('c-annot-text').textContent=isG?GPT_ANNOT:CAL_ANNOT;
+}
+
+function showTab(i){
+  document.querySelectorAll('.stab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  document.querySelectorAll('.showcase-card').forEach((c,j)=>c.classList.toggle('active',j===i));
+}
+
+function toggleFaq(el){
+  const item=el.closest('.faq-item');
+  const wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f=>f.classList.remove('open'));
+  if(!wasOpen)item.classList.add('open');
+}
+
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='none';obs.unobserve(e.target);}});
+},{threshold:0.08});
+docume
