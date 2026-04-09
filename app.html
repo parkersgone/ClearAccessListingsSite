@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///C:/Users/Deku4/Downloads/app_FINAL_1.html -->
+<!-- saved from url=(0049)file:///C:/Users/Deku4/Downloads/app_FINAL_4.html -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -387,7 +387,12 @@ select option{background:var(--dark3)}
   <div class="tp-divider"></div>
 
   <div class="tp-label">Current State</div>
-  <div class="tp-state" id="tp-state-display">loading...</div>
+  <div class="tp-state" id="tp-state-display">mode: guest
+plan: solo
+trialDays: 14
+gens used: 0
+gens limit: 60
+gens left: 60</div>
 </div>
 
 <div id="toasts"></div>
@@ -995,10 +1000,17 @@ function updateTestPanel(){
 }
 
 // Update state display whenever enterApp runs
-const _origEnterApp = enterApp;
-g('
+g('f-feat').addEventListener('input',function(){
+  g('wc').textContent=this.value.trim().split(/\s+/).filter(x=>x).length+' words';
+});
+
+// Poll test panel state display every second
+setInterval(()=>{
+  const panel = document.getElementById('test-panel');
+  if(panel && panel.style.display !== 'none') updateTestPanel();
+}, 1000);
 </script>
 <!-- Stripe.js -->
 <script src="./app_files/saved_resource"></script>
 
-<iframe name="__privateStripeMetricsController2810" frameborder="0" allowtransparency="true" scrolling="no" role="presentation" allow="payment *" src="./app_files/m-outer-3437aaddcdf6922d623e172c2d6f9278.html" aria-hidden="true" tabindex="-1" style="border: none !important; margin: 0px !important; padding: 0px !important; width: 1px !important; min-width: 100% !important; overflow: hidden !important; display: block !important; visibility: hidden !important; position: fixed !important; height: 1px !important; pointer-events: none !important; user-select: none !important;"></iframe></body></html>
+<iframe name="__privateStripeMetricsController6110" frameborder="0" allowtransparency="true" scrolling="no" role="presentation" allow="payment *" src="./app_files/m-outer-3437aaddcdf6922d623e172c2d6f9278.html" aria-hidden="true" tabindex="-1" style="border: none !important; margin: 0px !important; padding: 0px !important; width: 1px !important; min-width: 100% !important; overflow: hidden !important; display: block !important; visibility: hidden !important; position: fixed !important; height: 1px !important; pointer-events: none !important; user-select: none !important;"></iframe></body></html>
