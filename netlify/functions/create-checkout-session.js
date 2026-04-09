@@ -1,6 +1,5 @@
 // Netlify Function: create-checkout-session.js
 // Handles Stripe checkout for Clear Access Listings
-// Deploy to: /netlify/functions/create-checkout-session.js in your GitHub repo
 
 const PRICE_IDS = {
   solo: {
@@ -18,12 +17,10 @@ const PRICE_IDS = {
 };
 
 exports.handler = async (event) => {
-  // Only allow POST
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
-  // CORS headers
   const headers = {
     'Access-Control-Allow-Origin': 'https://clearaccesslistings.com',
     'Access-Control-Allow-Headers': 'Content-Type',
@@ -33,27 +30,24 @@ exports.handler = async (event) => {
   try {
     const { plan, billing } = JSON.parse(event.body);
 
-    // Validate inputs
     if (!PRICE_IDS[plan]) {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid plan' }) };
     }
 
     const priceId = PRICE_IDS[plan][billing === 'annual' ? 'annual' : 'monthly'];
-
-    // Get Stripe secret key from Netlify environment variable
     const stripeKey = process.env.stripekey;
+
     if (!stripeKey) {
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'Stripe not configured' }) };
     }
 
-    // Call Stripe API directly (no SDK needed)
     const params = new URLSearchParams({
       'mode': 'subscription',
       'line_items[0][price]': priceId,
       'line_items[0][quantity]': '1',
       'subscription_data[trial_period_days]': '14',
       'payment_method_collection': 'always',
-      'payment_method_types[0]': 'card',  // Force card field — disables Link/wallet default
+      'payment_method_types[0]': 'card',
       'success_url': 'https://clearaccesslistings.com/app.html?subscribed=true',
       'cancel_url': 'https://clearaccesslistings.com/app.html?cancelled=true',
     });
