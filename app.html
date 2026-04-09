@@ -284,33 +284,59 @@ select option{background:var(--dark3)}
 <div class="screen" id="s-pay">
   <div class="pw-wrap">
     <div class="pw-glow"></div>
-    <div class="pw-box">
+    <div class="pw-box" style="max-width:520px">
       <div class="pw-icon">✦</div>
       <h2>Choose your plan</h2>
-      <p class="pw-sub">Flat monthly rate. No per-listing fees. Generous generation limits per plan.</p>
-      <div class="plan-grid" style="grid-template-columns:1fr 1fr 1fr">
+      <p class="pw-sub">Flat monthly rate. No per-listing fees. Cancel anytime.</p>
+
+      <!-- Plan selection -->
+      <div class="plan-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:1rem">
         <div class="plan sel" id="pl-solo" onclick="selPlan('solo')">
           <span class="plan-badge">Solo Agent</span>
           <div class="plan-price">$197<em>/mo</em></div>
-          <div class="plan-note">60 generations/mo. One seat.</div>
+          <div class="plan-note">60 gen/mo. One seat.</div>
         </div>
         <div class="plan" id="pl-team" onclick="selPlan('team')">
           <span class="plan-badge">Team</span>
           <div class="plan-price">$397<em>/mo</em></div>
-          <div class="plan-note">200 generations/mo. Up to 10 seats.</div>
+          <div class="plan-note">200 gen/mo. 10 seats.</div>
         </div>
         <div class="plan" id="pl-enterprise" onclick="selPlan('enterprise')">
           <span class="plan-badge">Enterprise</span>
           <div class="plan-price">$1,497<em>/mo</em></div>
-          <div class="plan-note">Unlimited generations. Unlimited seats.</div>
+          <div class="plan-note">Unlimited. All seats.</div>
         </div>
       </div>
+
       <div class="field" style="margin-bottom:1rem;text-align:left"><label>Billing cycle</label>
         <select id="billing-cycle"><option value="monthly">Monthly billing</option><option value="annual">Annual billing, save 20%</option></select>
       </div>
-      <button class="btn btn-gold" style="margin-bottom:0.6rem" id="paywall-cta-btn" onclick="handlePaywallCta()">Subscribe with Stripe</button>
-      <button class="btn btn-outline" onclick="goScreen('s-app')">Back to App</button>
-      <p class="pw-fine">Processed securely by Stripe. Clear Access Listings never stores card details.</p>
+
+      <!-- Stripe Elements card form (shown for solo/team, hidden for enterprise) -->
+      <div id="card-form-wrap">
+        <div class="field" style="text-align:left;margin-bottom:0.75rem">
+          <label>Email</label>
+          <input type="email" id="stripe-email" placeholder="your@email.com" style="width:100%;padding:0.6rem 0.75rem;background:var(--dark3);border:1px solid var(--border-med);border-radius:7px;color:var(--text);font-size:0.9rem;font-family:var(--sans);box-sizing:border-box">
+        </div>
+        <div class="field" style="text-align:left;margin-bottom:1rem">
+          <label>Card details</label>
+          <!-- Stripe mounts the card element here -->
+          <div id="stripe-card-element" style="padding:0.65rem 0.75rem;background:var(--dark3);border:1px solid var(--border-med);border-radius:7px;min-height:40px"></div>
+          <div id="stripe-card-errors" style="color:var(--red);font-size:0.78rem;margin-top:0.4rem;display:none"></div>
+        </div>
+        <p style="font-size:0.73rem;color:var(--text-dim);text-align:left;margin-bottom:0.85rem">14-day free trial. Card required but not charged until day 15. Cancel anytime before then.</p>
+        <button class="btn btn-gold" style="margin-bottom:0.5rem" id="paywall-cta-btn" onclick="handlePaywallCta()">Start Free Trial</button>
+      </div>
+
+      <!-- Enterprise contact (shown only when enterprise selected) -->
+      <div id="enterprise-form-wrap" style="display:none">
+        <p style="color:var(--text-muted);font-size:0.87rem;margin-bottom:1rem;line-height:1.6">Enterprise plans are set up manually. Email us and we'll get you onboarded within one business day.</p>
+        <a href="mailto:hello@clearaccesslistings.com?subject=Enterprise Plan Inquiry&body=Hi, I'm interested in the Clear Access Listings Enterprise plan ($1,497/month). Please send me more information." class="btn btn-gold" style="display:block;margin-bottom:0.5rem;text-decoration:none">Email Us to Get Started</a>
+        <p style="font-size:0.78rem;color:var(--gold-light)">hello@clearaccesslistings.com</p>
+      </div>
+
+      <button class="btn btn-outline" style="margin-top:0.25rem" onclick="goScreen('s-app')">Back to App</button>
+      <p class="pw-fine">🔒 Secured by Stripe. Clear Access Listings never stores card details.</p>
     </div>
   </div>
 </div>
@@ -778,55 +804,128 @@ function splitVersions(txt){
 // ─────────────────────────────────────────
 // PAYWALL
 // ─────────────────────────────────────────
-function selPlan(p){
-  APP.plan=p;
-  ['solo','team','enterprise'].forEach(id=>{
-    const el=g('pl-'+id);
-    if(el) el.classList.toggle('sel',id===p);
-  });
-  // Update the CTA button based on plan
-  const btn=g('paywall-cta-btn');
-  if(!btn) return;
-  if(p==='enterprise'){
-    btn.textContent='Contact Us for Enterprise Access';
-    btn.style.background='transparent';
-    btn.style.border='1px solid var(--gold-border)';
-    btn.style.color='var(--gold-light)';
-  } else {
-    btn.textContent='Subscribe with Stripe';
-    btn.style.background='var(--gold)';
-    btn.style.border='none';
-    btn.style.color='#161200';
+// ─────────────────────────────────────────
+// STRIPE ELEMENTS SETUP
+// ─────────────────────────────────────────
+// PASTE YOUR STRIPE PUBLISHABLE KEY HERE (pk_live_... or pk_test_...)
+const STRIPE_PK = 'pk_live_51TKD3eGEX11Cve8sb2c5ta9Vnmx29aKXs2Rd1XRiBnC0KRJm2UDQZupnEz27wWiFXbi0tjLKkOmhn85ADXnPbOOe00gcUQZngR';
+
+let stripe = null;
+let cardElement = null;
+let stripeInitialized = false;
+
+function initStripe(){
+  if(stripeInitialized || APP.plan === 'enterprise') return;
+  if(!STRIPE_PK || STRIPE_PK === 'YOUR_STRIPE_PUBLISHABLE_KEY_HERE') return;
+  if(!stripe){
+    stripe = Stripe(STRIPE_PK);
+    const elements = stripe.elements({
+      appearance: {
+        theme: 'night',
+        variables: {
+          colorPrimary: '#C9A84C',
+          colorBackground: '#1a1608',
+          colorText: '#E8DFC0',
+          colorDanger: '#E05252',
+          fontFamily: 'DM Sans, sans-serif',
+          borderRadius: '7px'
+        }
+      }
+    });
+    cardElement = elements.create('card', {
+      hidePostalCode: true,
+      style: {
+        base: { fontSize: '15px', color: '#E8DFC0', '::placeholder': { color: '#6B6040' } }
+      }
+    });
+    cardElement.mount('#stripe-card-element');
+    cardElement.on('change', (e) => {
+      const err = g('stripe-card-errors');
+      if(e.error){ err.textContent = e.error.message; err.style.display = 'block'; }
+      else { err.style.display = 'none'; }
+    });
+    stripeInitialized = true;
   }
 }
+
+function selPlan(p){
+  APP.plan = p;
+  ['solo','team','enterprise'].forEach(id => {
+    const el = g('pl-'+id);
+    if(el) el.classList.toggle('sel', id === p);
+  });
+  const cardWrap = g('card-form-wrap');
+  const entWrap = g('enterprise-form-wrap');
+  if(p === 'enterprise'){
+    if(cardWrap) cardWrap.style.display = 'none';
+    if(entWrap) entWrap.style.display = 'block';
+  } else {
+    if(cardWrap) cardWrap.style.display = 'block';
+    if(entWrap) entWrap.style.display = 'none';
+    setTimeout(initStripe, 100);
+  }
+}
+
 function handlePaywallCta(){
-  if(APP.plan==='enterprise'){
-    window.location.href='mailto:hello@clearaccesslistings.com?subject=Enterprise Plan Inquiry&body=Hi, I\'m interested in the Clear Access Listings Enterprise plan ($1,497/month). Please send me more information.';
+  if(APP.plan === 'enterprise'){
+    window.location.href = 'mailto:hello@clearaccesslistings.com?subject=Enterprise Plan Inquiry&body=Hi, I\'m interested in the Clear Access Listings Enterprise plan ($1,497/month). Please send me more information.';
   } else {
     subscribe();
   }
 }
+
 async function subscribe(){
-  const cycle = g('billing-cycle').value;
+  if(!stripe || !cardElement){
+    toast('Payment form loading. Try again in a moment.', 'bad');
+    return;
+  }
+  const email = g('stripe-email')?.value?.trim();
+  if(!email || !email.includes('@')){ toast('Please enter your email address.', 'bad'); return; }
+
   const btn = g('paywall-cta-btn');
   btn.disabled = true;
-  btn.textContent = 'Connecting to Stripe...';
+  btn.textContent = 'Processing...';
+
   try {
+    const { paymentMethod, error } = await stripe.createPaymentMethod({
+      type: 'card',
+      card: cardElement,
+      billing_details: { email }
+    });
+
+    if(error){
+      const errEl = g('stripe-card-errors');
+      errEl.textContent = error.message;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Start Free Trial';
+      return;
+    }
+
+    const cycle = g('billing-cycle').value;
     const res = await fetch('/.netlify/functions/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan: APP.plan, billing: cycle })
+      body: JSON.stringify({ plan: APP.plan, billing: cycle, paymentMethodId: paymentMethod.id, email, mode: 'elements' })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Checkout failed');
-    window.location.href = data.url; // redirect to Stripe checkout page
-  } catch(err) {
+    if(!res.ok) throw new Error(data.error || 'Subscription failed');
+
+    if(data.requiresAction && data.clientSecret){
+      const { error: confirmError } = await stripe.confirmCardPayment(data.clientSecret);
+      if(confirmError) throw new Error(confirmError.message);
+    }
+
+    APP.mode = 'active';
+    localStorage.setItem('cal_gens', '0');
+    enterApp();
+    toast('Welcome! Your 14-day trial has started.', 'ok');
+
+  } catch(err){
     toast('Error: ' + err.message, 'bad');
     btn.disabled = false;
-    btn.textContent = 'Subscribe with Stripe';
+    btn.textContent = 'Start Free Trial';
   }
-  // window.location.href=url;
-  toast('Connecting to Stripe...','ok');
 }
 
 // ─────────────────────────────────────────
@@ -835,7 +934,12 @@ async function subscribe(){
 function g(s){return document.getElementById(s);}
 function v(s){return g(s).value.trim();}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function goScreen(s){document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));g(s).classList.add('active');}
+function goScreen(s){
+  document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));
+  g(s).classList.add('active');
+  // Init Stripe when paywall opens
+  if(s === 's-pay' && APP.plan !== 'enterprise') setTimeout(initStripe, 150);
+}
 function clearOutput(){g('cards').innerHTML='';g('empty-state').style.display='flex';g('shims').classList.remove('on');}
 function showErr(el,msg){el.textContent=msg;el.style.display='block';}
 function setLoading(on){
@@ -902,5 +1006,7 @@ setInterval(()=>{
   if(panel && panel.style.display !== 'none') updateTestPanel();
 }, 1000);
 </script>
+<!-- Stripe.js -->
+<script src="https://js.stripe.com/v3/"></script>
 </body>
 </html>
