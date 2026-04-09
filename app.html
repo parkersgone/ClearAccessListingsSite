@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0049)file:///C:/Users/Deku4/Downloads/app_FINAL_1.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clear Access Listings | Copywriting Agent</title>
 <meta name="description" content="Three professional real estate listing descriptions in under 60 seconds.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./app_files/css2" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -108,9 +108,9 @@ select option{background:var(--dark3)}
 @keyframes shim{0%,100%{background:var(--dark3)}50%{background:var(--dark4)}}
 
 /* PAYWALL */
-.pw-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:1.5rem;position:relative;overflow:hidden}
+.pw-wrap{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:1.5rem;position:relative;overflow-y:auto}
 .pw-glow{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(201,168,76,0.05) 0%,transparent 65%);pointer-events:none}
-.pw-box{background:var(--dark2);border:1px solid var(--border-gold);border-radius:16px;padding:2.25rem;width:100%;max-width:440px;position:relative;z-index:1;text-align:center}
+.pw-box{background:var(--dark2);border:1px solid var(--border-gold);border-radius:16px;padding:1.5rem;width:100%;max-width:440px;position:relative;z-index:1;text-align:center}
 .pw-icon{width:54px;height:54px;background:var(--gold-dim);border:1px solid var(--border-gold);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto 1.2rem}
 .pw-box h2{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:500;margin-bottom:0.5rem}
 .pw-sub{color:var(--text-muted);font-size:0.83rem;margin-bottom:1.6rem;line-height:1.6}
@@ -166,8 +166,8 @@ select option{background:var(--dark3)}
         <span class="sub">Professional Listing Copy</span>
       </div>
       <div class="tabs">
-        <button class="tab active" onclick="authTab('in')">Sign In</button>
-        <button class="tab" onclick="authTab('up')">Start Free Trial</button>
+        <button class="tab active" onclick="authTab(&#39;in&#39;)">Sign In</button>
+        <button class="tab" onclick="authTab(&#39;up&#39;)">Start Free Trial</button>
       </div>
 
       <div id="pane-in">
@@ -176,7 +176,7 @@ select option{background:var(--dark3)}
         <div class="err-msg" id="li-err"></div>
         <button class="btn btn-gold" style="margin-bottom:0.85rem" onclick="doLogin()">Sign In</button>
         <div class="divider">new here?</div>
-        <button class="btn btn-outline" style="margin-bottom:0.6rem" onclick="authTab('up')">Start 14-Day Free Trial</button>
+        <button class="btn btn-outline" style="margin-bottom:0.6rem" onclick="authTab(&#39;up&#39;)">Start 14-Day Free Trial</button>
         <button class="demo-link" onclick="doDemo()">View demo first, no account needed</button>
       </div>
 
@@ -193,7 +193,7 @@ select option{background:var(--dark3)}
           <!-- PRODUCTION: Replace this entire div with your Stripe Elements mount point -->
           <!-- <div id="stripe-card-element"></div> -->
           <div class="card-mock">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.4"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.4"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
             <span>Card number</span>
             <div class="card-logos"><span class="card-logo">VISA</span><span class="card-logo">MC</span></div>
           </div>
@@ -213,13 +213,13 @@ select option{background:var(--dark3)}
 <div class="screen" id="s-app">
   <div class="topbar">
     <div class="topbar-left">
-      <span style="font-family:'Playfair Display',serif;color:var(--gold);letter-spacing:0.04em;font-size:0.95rem">Clear Access Listings</span>
+      <span style="font-family:&#39;Playfair Display&#39;,serif;color:var(--gold);letter-spacing:0.04em;font-size:0.95rem">Clear Access Listings</span>
       <span id="demo-badge" class="demo-badge" style="display:none">Demo Mode</span>
     </div>
     <div class="topbar-right">
-      <a href="index.html" class="home-link">Home</a>
+      <a href="file:///C:/Users/Deku4/Downloads/index.html" class="home-link">Home</a>
       <span id="trial-pill" class="trial-pill" style="display:none">Trial: 14 days left</span>
-      <button class="btn btn-gold" id="upgrade-btn" style="padding:0.32rem 0.85rem;font-size:0.78rem;width:auto;display:none" onclick="goScreen('s-pay')">Upgrade</button>
+      <button class="btn btn-gold" id="upgrade-btn" style="padding:0.32rem 0.85rem;font-size:0.78rem;width:auto;display:none" onclick="goScreen(&#39;s-pay&#39;)">Upgrade</button>
       <button class="btn-ghost" onclick="signOut()">Sign Out</button>
     </div>
   </div>
@@ -290,18 +290,18 @@ select option{background:var(--dark3)}
       <p class="pw-sub">Flat monthly rate. No per-listing fees. Cancel anytime.</p>
 
       <!-- Plan selection -->
-      <div class="plan-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:1rem">
-        <div class="plan sel" id="pl-solo" onclick="selPlan('solo')">
+      <div class="plan-grid" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:0.75rem">
+        <div class="plan sel" id="pl-solo" onclick="selPlan(&#39;solo&#39;)">
           <span class="plan-badge">Solo Agent</span>
           <div class="plan-price">$197<em>/mo</em></div>
           <div class="plan-note">60 gen/mo. One seat.</div>
         </div>
-        <div class="plan" id="pl-team" onclick="selPlan('team')">
+        <div class="plan" id="pl-team" onclick="selPlan(&#39;team&#39;)">
           <span class="plan-badge">Team</span>
           <div class="plan-price">$397<em>/mo</em></div>
           <div class="plan-note">200 gen/mo. 10 seats.</div>
         </div>
-        <div class="plan" id="pl-enterprise" onclick="selPlan('enterprise')">
+        <div class="plan" id="pl-enterprise" onclick="selPlan(&#39;enterprise&#39;)">
           <span class="plan-badge">Enterprise</span>
           <div class="plan-price">$1,497<em>/mo</em></div>
           <div class="plan-note">Unlimited. All seats.</div>
@@ -331,57 +331,57 @@ select option{background:var(--dark3)}
       <!-- Enterprise contact (shown only when enterprise selected) -->
       <div id="enterprise-form-wrap" style="display:none">
         <p style="color:var(--text-muted);font-size:0.87rem;margin-bottom:1rem;line-height:1.6">Enterprise plans are set up manually. Email us and we'll get you onboarded within one business day.</p>
-        <a href="mailto:hello@clearaccesslistings.com?subject=Enterprise Plan Inquiry&body=Hi, I'm interested in the Clear Access Listings Enterprise plan ($1,497/month). Please send me more information." class="btn btn-gold" style="display:block;margin-bottom:0.5rem;text-decoration:none">Email Us to Get Started</a>
-        <p style="font-size:0.78rem;color:var(--gold-light)">hello@clearaccesslistings.com</p>
+        <a href="file:///C:/cdn-cgi/l/email-protection#a9c1ccc5c5c6e9cac5ccc8dbc8cacaccdadac5c0daddc0c7ceda87cac6c496dadccbc3cccadd94ecc7ddccdbd9dbc0dacc89f9c5c8c789e0c7d8dcc0dbd08fcbc6cdd094e1c08589e08ec489c0c7ddccdbccdaddcccd89c0c789ddc1cc89eac5ccc8db89e8cacaccdada89e5c0daddc0c7ceda89ecc7ddccdbd9dbc0dacc89d9c5c8c789818d98859d909e86c4c6c7ddc1808789f9c5ccc8dacc89daccc7cd89c4cc89c4c6dbcc89c0c7cfc6dbc4c8ddc0c6c787" class="btn btn-gold" style="display:block;margin-bottom:0.5rem;text-decoration:none">Email Us to Get Started</a>
+        <p style="font-size:0.78rem;color:var(--gold-light)"><a href="file:///C:/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="553d3039393a153639303427343636302626393c26213c3b32267b363a38">[email&nbsp;protected]</a></p>
       </div>
 
-      <button class="btn btn-outline" style="margin-top:0.25rem" onclick="goScreen('s-app')">Back to App</button>
+      <button class="btn btn-outline" style="margin-top:0.25rem" onclick="goScreen(&#39;s-app&#39;)">Back to App</button>
       <p class="pw-fine">🔒 Secured by Stripe. Clear Access Listings never stores card details.</p>
     </div>
   </div>
 </div>
 
 <!-- ══ TEST PANEL (test login only — remove before launch) ══ -->
-<button id="test-toggle" onclick="document.getElementById('test-panel').style.display=document.getElementById('test-panel').style.display==='none'?'block':'none'">🧪 Test Panel</button>
+<button id="test-toggle" onclick="document.getElementById(&#39;test-panel&#39;).style.display=document.getElementById(&#39;test-panel&#39;).style.display===&#39;none&#39;?&#39;block&#39;:&#39;none&#39;">🧪 Test Panel</button>
 <div id="test-panel">
   <div class="tp-title">Dev Test Panel</div>
 
   <div class="tp-group">
     <div class="tp-label">Simulate User State</div>
-    <button class="tp-btn gold" onclick="testSetState('trial',14,'solo',3)">✦ Fresh Trial (3 gens used)</button>
-    <button class="tp-btn gold" onclick="testSetState('trial',14,'solo',4)">✦ Trial: 1 gen left</button>
-    <button class="tp-btn danger" onclick="testSetState('trial',14,'solo',5)">✦ Trial: 0 gens — hits paywall</button>
-    <button class="tp-btn" onclick="testSetState('trial',1,'solo',0)">✦ Trial: 1 day left</button>
-    <button class="tp-btn danger" onclick="testSetState('trial',0,'solo',5)">✦ Trial expired (days=0)</button>
+    <button class="tp-btn gold" onclick="testSetState(&#39;trial&#39;,14,&#39;solo&#39;,3)">✦ Fresh Trial (3 gens used)</button>
+    <button class="tp-btn gold" onclick="testSetState(&#39;trial&#39;,14,&#39;solo&#39;,4)">✦ Trial: 1 gen left</button>
+    <button class="tp-btn danger" onclick="testSetState(&#39;trial&#39;,14,&#39;solo&#39;,5)">✦ Trial: 0 gens — hits paywall</button>
+    <button class="tp-btn" onclick="testSetState(&#39;trial&#39;,1,&#39;solo&#39;,0)">✦ Trial: 1 day left</button>
+    <button class="tp-btn danger" onclick="testSetState(&#39;trial&#39;,0,&#39;solo&#39;,5)">✦ Trial expired (days=0)</button>
   </div>
 
   <div class="tp-divider"></div>
 
   <div class="tp-group">
     <div class="tp-label">Simulate Paid Plans</div>
-    <button class="tp-btn success" onclick="testSetState('active',0,'solo',0)">✦ Solo subscriber (60 gen)</button>
-    <button class="tp-btn success" onclick="testSetState('active',0,'solo',58)">✦ Solo: 2 gens left</button>
-    <button class="tp-btn danger" onclick="testSetState('active',0,'solo',60)">✦ Solo: limit hit</button>
-    <button class="tp-btn success" onclick="testSetState('active',0,'team',0)">✦ Team subscriber</button>
-    <button class="tp-btn success" onclick="testSetState('active',0,'enterprise',0)">✦ Enterprise (unlimited)</button>
+    <button class="tp-btn success" onclick="testSetState(&#39;active&#39;,0,&#39;solo&#39;,0)">✦ Solo subscriber (60 gen)</button>
+    <button class="tp-btn success" onclick="testSetState(&#39;active&#39;,0,&#39;solo&#39;,58)">✦ Solo: 2 gens left</button>
+    <button class="tp-btn danger" onclick="testSetState(&#39;active&#39;,0,&#39;solo&#39;,60)">✦ Solo: limit hit</button>
+    <button class="tp-btn success" onclick="testSetState(&#39;active&#39;,0,&#39;team&#39;,0)">✦ Team subscriber</button>
+    <button class="tp-btn success" onclick="testSetState(&#39;active&#39;,0,&#39;enterprise&#39;,0)">✦ Enterprise (unlimited)</button>
   </div>
 
   <div class="tp-divider"></div>
 
   <div class="tp-group">
     <div class="tp-label">Simulate Screens</div>
-    <button class="tp-btn" onclick="goScreen('s-auth');authTab('in')">→ Sign In screen</button>
-    <button class="tp-btn" onclick="goScreen('s-auth');authTab('up')">→ Sign Up screen</button>
+    <button class="tp-btn" onclick="goScreen(&#39;s-auth&#39;);authTab(&#39;in&#39;)">→ Sign In screen</button>
+    <button class="tp-btn" onclick="goScreen(&#39;s-auth&#39;);authTab(&#39;up&#39;)">→ Sign Up screen</button>
     <button class="tp-btn" onclick="doDemo()">→ Demo mode</button>
-    <button class="tp-btn" onclick="goScreen('s-pay')">→ Paywall / upgrade</button>
+    <button class="tp-btn" onclick="goScreen(&#39;s-pay&#39;)">→ Paywall / upgrade</button>
   </div>
 
   <div class="tp-divider"></div>
 
   <div class="tp-group">
     <div class="tp-label">Actions</div>
-    <button class="tp-btn" onclick="localStorage.setItem('cal_gens','0');updateGenCounter();toast('Generation count reset to 0','ok')">↺ Reset gen count</button>
-    <button class="tp-btn danger" onclick="testSetState('trial',14,'solo',5);goScreen('s-pay')">✦ Force paywall now</button>
+    <button class="tp-btn" onclick="localStorage.setItem(&#39;cal_gens&#39;,&#39;0&#39;);updateGenCounter();toast(&#39;Generation count reset to 0&#39;,&#39;ok&#39;)">↺ Reset gen count</button>
+    <button class="tp-btn danger" onclick="testSetState(&#39;trial&#39;,14,&#39;solo&#39;,5);goScreen(&#39;s-pay&#39;)">✦ Force paywall now</button>
   </div>
 
   <div class="tp-divider"></div>
@@ -392,7 +392,7 @@ select option{background:var(--dark3)}
 
 <div id="toasts"></div>
 
-<script>
+<script data-cfasync="false" src="file:///C:/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ─────────────────────────────────────────
 // GENERATION LIMITS PER PLAN
 // ─────────────────────────────────────────
@@ -808,7 +808,7 @@ function splitVersions(txt){
 // STRIPE ELEMENTS SETUP
 // ─────────────────────────────────────────
 // PASTE YOUR STRIPE PUBLISHABLE KEY HERE (pk_live_... or pk_test_...)
-const STRIPE_PK = 'pk_live_51TKD3eGEX11Cve8sb2c5ta9Vnmx29aKXs2Rd1XRiBnC0KRJm2UDQZupnEz27wWiFXbi0tjLKkOmhn85ADXnPbOOe00gcUQZngR';
+const STRIPE_PK = 'YOUR_STRIPE_PUBLISHABLE_KEY_HERE';
 
 let stripe = null;
 let cardElement = null;
@@ -996,17 +996,9 @@ function updateTestPanel(){
 
 // Update state display whenever enterApp runs
 const _origEnterApp = enterApp;
-g('f-feat').addEventListener('input',function(){
-  g('wc').textContent=this.value.trim().split(/\s+/).filter(x=>x).length+' words';
-});
-
-// Poll the state display every second when test panel is visible
-setInterval(()=>{
-  const panel = document.getElementById('test-panel');
-  if(panel && panel.style.display !== 'none') updateTestPanel();
-}, 1000);
+g('
 </script>
 <!-- Stripe.js -->
-<script src="https://js.stripe.com/v3/"></script>
-</body>
-</html>
+<script src="./app_files/saved_resource"></script>
+
+<iframe name="__privateStripeMetricsController2810" frameborder="0" allowtransparency="true" scrolling="no" role="presentation" allow="payment *" src="./app_files/m-outer-3437aaddcdf6922d623e172c2d6f9278.html" aria-hidden="true" tabindex="-1" style="border: none !important; margin: 0px !important; padding: 0px !important; width: 1px !important; min-width: 100% !important; overflow: hidden !important; display: block !important; visibility: hidden !important; position: fixed !important; height: 1px !important; pointer-events: none !important; user-select: none !important;"></iframe></body></html>
