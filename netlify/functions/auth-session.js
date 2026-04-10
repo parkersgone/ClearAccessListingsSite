@@ -27,7 +27,8 @@ exports.handler = async (event) => {
       valid: true, plan: profile.plan, mode, trialDays,
       generationsUsed: profile.generations_used,
       email: profile.email || userData.email || '',
-      stripeCustomerId: profile.stripe_customer_id || null
+      stripeCustomerId: profile.stripe_customer_id || null,
+      subscriptionId: profile.subscription_id || null
     }) };
   } catch (err) {
     console.error('Session error:', err.message);
