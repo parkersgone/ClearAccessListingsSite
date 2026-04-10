@@ -744,7 +744,7 @@ async function generate(){
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt: userMsg, system: SYSTEM_PROMPT })
     });
-    if(!res.ok){ const e=await res.json(); throw new Error(e.error||'Server error'); }
+    if(!res.ok){ let msg='Server error ('+res.status+')'; try{ const e=await res.json(); msg=e.error||msg; }catch(_){} throw new Error(msg); }
     const data = await res.json();
     const used = incrementGenerations();
     renderCards(data.text);
