@@ -174,7 +174,7 @@ select option{background:var(--dark3)}
         <div class="field"><label>Email</label><input type="email" id="li-email" placeholder="you@email.com" autocomplete="email"></div>
         <div class="field"><label>Password</label><input type="password" id="li-pw" placeholder="••••••••" autocomplete="current-password"></div>
         <div class="err-msg" id="li-err"></div>
-        <button class="btn btn-gold" style="margin-bottom:0.85rem" onclick="doLogin()">Sign In</button>
+        <button class="btn btn-gold" id="li-btn" style="margin-bottom:0.85rem" onclick="doLogin()">Sign In</button>
         <div class="divider">new here?</div>
         <button class="btn btn-outline" style="margin-bottom:0.6rem" onclick="authTab(&#39;up&#39;)">Start 14-Day Free Trial</button>
         <button class="demo-link" onclick="doDemo()">View demo first, no account needed</button>
@@ -199,7 +199,7 @@ select option{background:var(--dark3)}
           <div class="row2" style="gap:0.5rem"><input type="text" id="su-exp" placeholder="MM / YY" autocomplete="cc-exp" maxlength="7"><input type="text" id="su-cvc" placeholder="CVC" autocomplete="cc-csc" maxlength="4"></div>
         </div>
         <div class="err-msg" id="su-err"></div>
-        <button class="btn btn-gold" style="margin-bottom:0.5rem" onclick="doSignup()">Start 14-Day Free Trial</button>
+        <button class="btn btn-gold" id="su-btn" style="margin-bottom:0.5rem" onclick="doSignup()">Start 14-Day Free Trial</button>
         <p style="font-size:0.7rem;color:var(--text-dim);text-align:center">No charge for 14 days. Cancel before trial ends and pay nothing.</p>
         <div class="divider">or</div>
         <button class="btn btn-outline" onclick="doDemo()">See demo first, no account needed</button>
@@ -511,28 +511,35 @@ FINAL CHECK: Search your output for the character. If you find even one, rewrite
 
 // ─────────────────────────────────────────
 // STATE
-// Generations are stored in localStorage so
-// they persist across page refreshes.
-// In production replace with server-side counts.
 // ─────────────────────────────────────────
-// Handle Stripe redirect back
-(function(){
+let APP={mode:'guest',isDemo:false,trialDays:14,plan:'solo'};
+
+// Restore session on page load, then handle URL params
+(async function(){
   const params = new URLSearchParams(window.location.search);
-  if(params.get('subscribed')==='true'){
-    // User completed checkout - treat as active subscriber
-    APP={mode:'active',isDemo:false,trialDays:0,plan:'solo'};
-    localStorage.setItem('cal_gens','0');
+  const subscribed = params.get('subscribed')==='true';
+  const cancelled  = params.get('cancelled')==='true';
+  if(subscribed || cancelled) history.replaceState({},'','/app.html');
+  if(cancelled){ toast('No worries. You can subscribe any time.','nudge'); }
+
+  const token = localStorage.getItem('cal_token');
+  if(!token) return;
+  try{
+    const res = await fetch('/.netlify/functions/auth-session',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token})
+    });
+    const data = await res.json();
+    if(!res.ok || !data.valid){ localStorage.removeItem('cal_token'); return; }
+    localStorage.setItem('cal_gens', String(data.generationsUsed));
+    APP = {mode:data.mode, isDemo:false, trialDays:data.trialDays, plan:data.plan};
     enterApp();
-    toast('Welcome to Clear Access Listings! Your trial has started.','ok');
-    history.replaceState({},'','/app.html'); // clean URL
-  } else if(params.get('cancelled')==='true'){
-    // User cancelled checkout - stay on auth screen
-    toast('No worries. You can subscribe any time.','nudge');
-    history.replaceState({},'','/app.html');
+    if(subscribed) toast('Welcome to Clear Access Listings! Your subscription is active.','ok');
+  }catch(e){
+    localStorage.removeItem('cal_token');
   }
 })();
-
-let APP={mode:'guest',isDemo:false,trialDays:14,plan:'solo'};
 
 function getGenerationsUsed(){
   return parseInt(localStorage.getItem('cal_gens')||'0');
@@ -597,62 +604,62 @@ function authTab(t){
   g('pane-up').style.display=t==='up'?'block':'none';
 }
 
-function doLogin(){
+async function doLogin(){
   const email=g('li-email').value.trim(),pw=g('li-pw').value,err=g('li-err');
-
-  // ── TEST LOGIN (remove before going live) ──
-  if(email==='test@clearaccesslistings.com'&&pw==='testaccess2025'){
-    err.style.display='none';
-    APP={mode:'trial',isDemo:false,trialDays:14,plan:'solo'};
-    localStorage.setItem('cal_gens','0');
-    enterApp();
-    // Show test panel AFTER enterApp so screen transition is complete
-    setTimeout(()=>{
-      const toggle = document.getElementById('test-toggle');
-      const panel = document.getElementById('test-panel');
-      if(toggle) toggle.style.display='block';
-      if(panel) panel.style.display='block'; // Open panel immediately so it's obvious
-      updateTestPanel();
-      toast('🧪 Test mode active. Panel is open bottom-left.','ok');
-    }, 100);
-    return;
-  }
-  // ── END TEST LOGIN ──
-
   if(!email||!pw){showErr(err,'Please enter your email and password.');return;}
-
-  // PRODUCTION: const res=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,pw})});
-  // const {token,plan,generationsUsed,trialDaysLeft}=await res.json();
-  // localStorage.setItem('cal_token',token);
-  // APP.mode=trialDaysLeft>0?'trial':'active'; APP.plan=plan;
-  // localStorage.setItem('cal_gens',String(generationsUsed));
-
-  err.style.display='none';
-  APP={mode:'active',isDemo:false,trialDays:0,plan:'solo'};
-  enterApp();toast('Welcome back.','ok');
+  const btn=g('li-btn'); btn.disabled=true; btn.textContent='Signing in...';
+  try{
+    const res=await fetch('/.netlify/functions/auth-login',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password:pw})
+    });
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.error||'Login failed');
+    localStorage.setItem('cal_token',data.token);
+    localStorage.setItem('cal_gens',String(data.generationsUsed));
+    APP={mode:data.mode,isDemo:false,trialDays:data.trialDays,plan:data.plan};
+    err.style.display='none';
+    enterApp();
+    toast('Welcome back.','ok');
+  }catch(e){
+    showErr(err,e.message);
+  }finally{
+    btn.disabled=false; btn.textContent='Sign In';
+  }
 }
 
-function doSignup(){
+async function doSignup(){
   const first=g('su-first').value.trim(),email=g('su-email').value.trim(),pw=g('su-pw').value,err=g('su-err');
   if(!first||!email||!pw){showErr(err,'Please fill in all fields.');return;}
   if(pw.length<8){showErr(err,'Password must be at least 8 characters.');return;}
-
-  // PRODUCTION:
-  // 1. stripe.createPaymentMethod() from card element
-  // 2. POST /api/auth/signup {first,email,pw,paymentMethodId}
-  // 3. Backend: create Stripe customer, attach card, create subscription with trial_period_days:14
-  // 4. Response: {token, trialDaysLeft:14}
-  // 5. localStorage.setItem('cal_token',token); localStorage.setItem('cal_gens','0');
-
-  err.style.display='none';
-  APP={mode:'trial',isDemo:false,trialDays:14,plan:'solo'};
-  localStorage.setItem('cal_gens','0');
-  enterApp();toast('Trial started. 14 days, 5 free generations.','ok');
+  const btn=g('su-btn'); btn.disabled=true; btn.textContent='Creating account...';
+  try{
+    const res=await fetch('/.netlify/functions/auth-signup',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password:pw,firstName:first})
+    });
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.error||'Signup failed');
+    localStorage.setItem('cal_token',data.token);
+    localStorage.setItem('cal_gens','0');
+    APP={mode:'trial',isDemo:false,trialDays:14,plan:'solo'};
+    err.style.display='none';
+    enterApp();
+    toast('Account created! Your 14-day free trial has started.','ok');
+  }catch(e){
+    showErr(err,e.message);
+  }finally{
+    btn.disabled=false; btn.textContent='Start 14-Day Free Trial';
+  }
 }
 
 function doDemo(){APP.mode='demo';APP.isDemo=true;enterApp();}
 
 function signOut(){
+  localStorage.removeItem('cal_token');
+  localStorage.setItem('cal_gens','0');
   APP={mode:'guest',isDemo:false,trialDays:14,plan:'solo'};
   clearOutput();goScreen('s-auth');
 }
@@ -908,7 +915,7 @@ async function subscribe(){
     const res = await fetch('/.netlify/functions/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan: APP.plan, billing: cycle, paymentMethodId: paymentMethod.id, email, mode: 'elements' })
+      body: JSON.stringify({ plan: APP.plan, billing: cycle, paymentMethodId: paymentMethod.id, email, mode: 'elements', token: localStorage.getItem('cal_token') })
     });
     const data = await res.json();
     if(!res.ok) throw new Error(data.error || 'Subscription failed');
