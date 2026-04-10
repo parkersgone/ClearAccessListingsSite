@@ -12,7 +12,7 @@ exports.handler = async (event) => {
     const SUPA_URL = process.env.SUPABASE_URL;
     const SUPA_KEY = process.env.SUPABASE_SERVICE_KEY;
 
-    // Use admin endpoint so user is auto-confirmed, no email verification needed
+    // Create auth user (auto-confirmed, no email verification)
     const adminRes = await fetch(`${SUPA_URL}/auth/v1/admin/users`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` },
@@ -20,10 +20,9 @@ exports.handler = async (event) => {
     });
     const adminData = await adminRes.json();
     if (!adminRes.ok || adminData.error) throw new Error(adminData.msg || adminData.error || 'Signup failed');
-
     const userId = adminData.id;
 
-    // Sign in immediately to get a session token
+    // Sign in to get session token
     const authRes = await fetch(`${SUPA_URL}/auth/v1/token?grant_type=password`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY },
@@ -31,7 +30,6 @@ exports.handler = async (event) => {
     });
     const authData = await authRes.json();
     if (!authRes.ok || authData.error) throw new Error(authData.error_description || 'Login after signup failed');
-
     const token = authData.access_token;
 
     // Create profile record
@@ -39,6 +37,13 @@ exports.handler = async (event) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Prefer': 'return=minimal' },
       body: JSON.stringify({ id: userId, email, plan: 'solo', mode: 'trial', trial_start: new Date().toISOString(), generations_used: 0 })
+    });
+
+    // Add to mailing list (ignore duplicates)
+    await fetch(`${SUPA_URL}/rest/v1/mailing_list`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Prefer': 'resolution=ignore-duplicates,return=minimal' },
+      body: JSON.stringify({ email, first_name: firstName || '' })
     });
 
     return { statusCode: 200, headers, body: JSON.stringify({ token, plan: 'solo', mode: 'trial', trialDays: 14, generationsUsed: 0 }) };
