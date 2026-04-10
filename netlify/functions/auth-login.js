@@ -31,7 +31,8 @@ exports.handler = async (event) => {
       token, plan: profile.plan, mode, trialDays,
       generationsUsed: profile.generations_used,
       email: profile.email || email,
-      stripeCustomerId: profile.stripe_customer_id || null
+      stripeCustomerId: profile.stripe_customer_id || null,
+      subscriptionId: profile.subscription_id || null
     }) };
   } catch (err) {
     console.error('Login error:', err.message);
