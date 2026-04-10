@@ -1,5 +1,5 @@
 const PRICE_IDS = {
-  solo:       { monthly: 'price_1TKWDVGEX11Cve8stop9jZrj', annual: 'price_1TKPrXGEX11Cve8s5el4LmoU' },
+  solo:       { monthly: 'price_1TKPlJGEX11Cve8swlBU8DAM', annual: 'price_1TKPrXGEX11Cve8s5el4LmoU' },
   team:       { monthly: 'price_1TKPmaGEX11Cve8sEqx7JY4S', annual: 'price_1TKPskGEX11Cve8sBentDGX9' },
   enterprise: { monthly: 'price_1TKPoSGEX11Cve8sDfxWvUL7', annual: 'price_1TKPu0GEX11Cve8sHgwzg4Ju' }
 };
@@ -31,7 +31,7 @@ async function updateSupabaseProfile(token, fields) {
       body: JSON.stringify(fields)
     });
   } catch (e) {
-    console.error('Supabase profile update failed:', e.message);
+    console.error('Supabase update failed:', e.message);
   }
 }
 
@@ -40,26 +40,42 @@ exports.handler = async (event) => {
     return { statusCode: 200, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' } };
   }
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
-
   const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type', 'Content-Type': 'application/json' };
-
   try {
-    const { plan, billing, paymentMethodId, email, mode, token } = JSON.parse(event.body);
-    if (!PRICE_IDS[plan]) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid plan' }) };
-
+    const { plan, billing, paymentMethodId, customerId, email, mode, token } = JSON.parse(event.body);
     const stripeKey = process.env.stripekey;
     if (!stripeKey) return { statusCode: 500, headers, body: JSON.stringify({ error: 'Stripe not configured' }) };
 
-    const priceId = PRICE_IDS[plan][billing === 'annual' ? 'annual' : 'monthly'];
-
-    if (mode === 'elements' && paymentMethodId && email) {
+    // SAVE-CARD MODE: create customer at signup, no subscription yet
+    if (mode === 'save-card' && paymentMethodId && email) {
       const customer = await stripePost('/customers', {
         email,
         payment_method: paymentMethodId,
         'invoice_settings[default_payment_method]': paymentMethodId
       }, stripeKey);
       if (customer.error) throw new Error(customer.error.message);
+      await updateSupabaseProfile(token, { stripe_customer_id: customer.id });
+      return { statusCode: 200, headers, body: JSON.stringify({ customerId: customer.id }) };
+    }
 
+    // ELEMENTS MODE: create subscription
+    if (mode === 'elements' && email) {
+      if (!PRICE_IDS[plan]) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid plan' }) };
+      const priceId = PRICE_IDS[plan][billing === 'annual' ? 'annual' : 'monthly'];
+      let customer;
+      if (customerId) {
+        // Use existing Stripe customer
+        customer = { id: customerId };
+      } else {
+        // Create new customer from payment method
+        if (!paymentMethodId) throw new Error('Payment method required');
+        customer = await stripePost('/customers', {
+          email,
+          payment_method: paymentMethodId,
+          'invoice_settings[default_payment_method]': paymentMethodId
+        }, stripeKey);
+        if (customer.error) throw new Error(customer.error.message);
+      }
       const subscription = await stripePost('/subscriptions', {
         customer: customer.id,
         'items[0][price]': priceId,
@@ -69,45 +85,19 @@ exports.handler = async (event) => {
         'expand[0]': 'latest_invoice.payment_intent'
       }, stripeKey);
       if (subscription.error) throw new Error(subscription.error.message);
-
-      // Save plan to Supabase
       await updateSupabaseProfile(token, {
-        mode: 'active',
-        plan,
-        stripe_customer_id: customer.id,
-        subscription_id: subscription.id
+        mode: 'active', plan, stripe_customer_id: customer.id, subscription_id: subscription.id
       });
-
       const paymentIntent = subscription.latest_invoice && subscription.latest_invoice.payment_intent;
       if (paymentIntent && paymentIntent.status === 'requires_action') {
         return { statusCode: 200, headers, body: JSON.stringify({ requiresAction: true, clientSecret: paymentIntent.client_secret }) };
       }
-
       return { statusCode: 200, headers, body: JSON.stringify({ success: true, subscriptionId: subscription.id }) };
     }
 
-    // Checkout fallback
-    const params = new URLSearchParams({
-      mode: 'subscription',
-      'line_items[0][price]': priceId,
-      'line_items[0][quantity]': '1',
-      'subscription_data[trial_period_days]': '14',
-      'payment_method_collection': 'always',
-      'payment_method_types[0]': 'card',
-      'success_url': 'https://clearaccesslistings.com/app.html?subscribed=true',
-      'cancel_url': 'https://clearaccesslistings.com/app.html?cancelled=true'
-    });
-    const response = await fetch(`${STRIPE_API}/checkout/sessions`, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${stripeKey}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: params.toString()
-    });
-    const session = await response.json();
-    if (!response.ok) throw new Error(session.error && session.error.message || 'Stripe error');
-
-    return { statusCode: 200, headers, body: JSON.stringify({ url: session.url }) };
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid request' }) };
   } catch (err) {
-    console.error('Stripe error:', err.message);
+    console.error('Checkout error:', err.message);
     return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
   }
 };
