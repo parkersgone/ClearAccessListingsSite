@@ -1,5 +1,5 @@
 const PRICE_IDS = {
-  solo:       { monthly: 'price_1TKPlJGEX11Cve8swlBU8DAM', annual: 'price_1TKPrXGEX11Cve8s5el4LmoU' },
+  solo:       { monthly: 'price_1TKWDVGEX11Cve8stop9jZrj', annual: 'price_1TKPrXGEX11Cve8s5el4LmoU' },
   team:       { monthly: 'price_1TKPmaGEX11Cve8sEqx7JY4S', annual: 'price_1TKPskGEX11Cve8sBentDGX9' },
   enterprise: { monthly: 'price_1TKPoSGEX11Cve8sDfxWvUL7', annual: 'price_1TKPu0GEX11Cve8sHgwzg4Ju' }
 };
