@@ -235,7 +235,7 @@ select option{background:var(--dark3)}
         <div class="row2" style="gap:0.5rem">
           <div class="field"><label>Year Built</label><input type="text" id="f-yr" placeholder="2006"></div>
           <div class="field"><label>Type</label>
-            <select id="f-type"><option>Single Family</option><option>Condo</option><option>Townhouse</option><option>New Construction</option><option>Investment</option></select>
+            <select id="f-type"><option>Single Family</option><option>Condo</option><option>Townhouse</option><option>New Construction</option><option>Apartment</option><option>Investment</option></select>
           </div>
         </div>
         <div class="field"><label>Lot Size</label><input type="text" id="f-lot" placeholder="0.28 acres (optional)"></div>
@@ -269,7 +269,7 @@ select option{background:var(--dark3)}
         <div class="shimmer" style="height:205px"></div>
         <div class="shimmer" style="height:260px"></div>
       </div>
-      <div id="cards"></div>
+      <div id="humanize-wrap" style="display:none;text-align:center;margin:0.75rem 0 0.5rem"><button id="humanize-btn" onclick="humanizeAll()" style="background:var(--gold-dim);border:1px solid var(--border-gold);color:var(--gold-light);padding:0.45rem 1.4rem;border-radius:6px;cursor:pointer;font-size:0.82rem;font-weight:600;letter-spacing:0.03em">Humanize All</button></div><div id="cards"></div>
     </div>
   </div>
 </div>
@@ -614,6 +614,18 @@ async function doLogin(){
   const email=g('li-email').value.trim(),pw=g('li-pw').value,err=g('li-err');
   if(!email||!pw){showErr(err,'Please enter your email and password.');return;}
   const btn=g('li-btn'); btn.disabled=true; btn.textContent='Signing in...';
+  // Hardcoded test account
+  if(email==='testing@clearaccessmedia.com'&&pw==='testing2025'){
+    APP={mode:'active',isDemo:false,trialDays:14,plan:'enterprise',email:'testing@clearaccessmedia.com',stripeCustomerId:null,subscriptionId:null};
+    localStorage.setItem('cal_token','test-bypass');
+    localStorage.setItem('cal_email','testing@clearaccessmedia.com');
+    localStorage.setItem('cal_gens','0');
+    err.style.display='none';
+    btn.disabled=false; btn.textContent='Sign In';
+    enterApp();
+    toast('Welcome back.','ok');
+    return;
+  }
   try{
     const res=await fetch('/.netlify/functions/auth-login',{
       method:'POST',
@@ -837,6 +849,42 @@ function renderCards(raw){
     wrap.appendChild(c);
   });
   toast('Five outputs ready.','ok');
+  const hw=g('humanize-wrap');if(hw){hw.style.display='block';const hb=g('humanize-btn');if(hb){hb.disabled=false;hb.textContent='Humanize All';}}
+}
+
+async function humanizeAll(){
+  const cards=document.querySelectorAll('.ocard');
+  if(!cards.length)return;
+  const btn=g('humanize-btn');
+  if(btn){btn.disabled=true;btn.textContent='Humanizing...';}
+  const instruction='Rewrite the following real estate copy applying these humanization rules: vary sentence length dramatically, use fragments occasionally, kill all adverbs, use contractions naturally, start at least 2 sentences with a specific number or physical detail, remove any phrase that sounds like it was typed by software. Do not change the facts, structure, or platform format. Only change the texture of the language.\n\n';
+  let ok=0;
+  for(const card of cards){
+    const body=card.querySelector('.ocard-body');
+    if(!body)continue;
+    const originalText=body.innerText||body.textContent;
+    try{
+      body.style.opacity='0.35';
+      const res=await fetch('/.netlify/functions/generate',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({prompt:instruction+originalText,system:SYSTEM_PROMPT})
+      });
+      if(!res.ok){let msg='Server error ('+res.status+')';try{const e=await res.json();msg=e.error||msg;}catch(_){}throw new Error(msg);}
+      const data=await res.json();
+      const humanized=data.text.trim();
+      body.innerHTML=esc(humanized);
+      const meta=card.querySelector('.ocard-meta');
+      if(meta)meta.textContent=humanized.split(/\s+/).length+' words';
+      body.style.opacity='1';
+      ok++;
+    }catch(e){
+      body.style.opacity='1';
+      toast('Error: '+e.message,'bad');
+    }
+  }
+  if(btn){btn.disabled=false;btn.textContent='Humanize All';}
+  if(ok>0)toast(ok+' versions humanized.','ok');
 }
 
 function splitVersions(txt){
