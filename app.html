@@ -665,6 +665,14 @@ async function doSignup(){
     if(siErr) throw new Error(siErr.message);
     // Card is now saved and authenticated. Store customer ID.
     const customerId=siData.customerId;
+    // Step 4: Create the trialing subscription immediately
+    const subRes=await fetch('/.netlify/functions/create-checkout-session',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({mode:'subscribe',plan:'solo',billing:'monthly',customerId,email,token:authData.token})
+    });
+    const subData=await subRes.json();
+    if(!subRes.ok) throw new Error(subData.error||'Failed to start trial subscription');
     localStorage.setItem('cal_token',authData.token);
     localStorage.setItem('cal_gens','0');
     localStorage.setItem('cal_email',email);
