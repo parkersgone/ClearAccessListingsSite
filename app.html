@@ -190,13 +190,8 @@ select option{background:var(--dark3)}
         <div class="field"><label>Password</label><input type="password" id="su-pw" placeholder="At least 8 characters" autocomplete="new-password"></div>
         <div class="field">
           <label>Card Details</label>
-          <!-- PRODUCTION: Replace this entire div with your Stripe Elements mount point -->
-          <!-- <div id="stripe-card-element"></div> -->
-          <div style="position:relative;margin-bottom:0.5rem">
-            <input type="text" id="su-card" placeholder="Card number" autocomplete="cc-number" inputmode="numeric" maxlength="19" style="padding-right:4.5rem">
-            <div class="card-logos" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%)"><span class="card-logo">VISA</span><span class="card-logo">MC</span></div>
-          </div>
-          <div class="row2" style="gap:0.5rem"><input type="text" id="su-exp" placeholder="MM / YY" autocomplete="cc-exp" maxlength="7"><input type="text" id="su-cvc" placeholder="CVC" autocomplete="cc-csc" maxlength="4"></div>
+          <div id="su-card-element" style="padding:0.65rem 0.75rem;background:var(--dark3);border:1px solid var(--border-med);border-radius:7px;min-height:40px"></div>
+          <div id="su-card-errors" style="color:var(--red);font-size:0.78rem;margin-top:0.4rem;display:none"></div>
         </div>
         <div class="err-msg" id="su-err"></div>
         <button class="btn btn-gold" id="su-btn" style="margin-bottom:0.5rem" onclick="doSignup()">Start 14-Day Free Trial</button>
@@ -512,7 +507,7 @@ FINAL CHECK: Search your output for the character. If you find even one, rewrite
 // ─────────────────────────────────────────
 // STATE
 // ─────────────────────────────────────────
-let APP={mode:'guest',isDemo:false,trialDays:14,plan:'solo'};
+let APP={mode:'guest',isDemo:false,trialDays:14,plan:'solo',email:'',stripeCustomerId:null};
 
 // Restore session on page load, then handle URL params
 (async function(){
@@ -533,7 +528,7 @@ let APP={mode:'guest',isDemo:false,trialDays:14,plan:'solo'};
     const data = await res.json();
     if(!res.ok || !data.valid){ localStorage.removeItem('cal_token'); return; }
     localStorage.setItem('cal_gens', String(data.generationsUsed));
-    APP = {mode:data.mode, isDemo:false, trialDays:data.trialDays, plan:data.plan};
+    APP = {mode:data.mode, isDemo:false, trialDays:data.trialDays, plan:data.plan, email:data.email||'', stripeCustomerId:data.stripeCustomerId||null};
     enterApp();
     if(subscribed) toast('Welcome to Clear Access Listings! Your subscription is active.','ok');
   }catch(e){
@@ -602,6 +597,7 @@ function authTab(t){
   document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',(i===0&&t==='in')||(i===1&&t==='up')));
   g('pane-in').style.display=t==='in'?'block':'none';
   g('pane-up').style.display=t==='up'?'block':'none';
+  if(t==='up') setTimeout(initSignupStripe, 100);
 }
 
 async function doLogin(){
@@ -618,7 +614,7 @@ async function doLogin(){
     if(!res.ok) throw new Error(data.error||'Login failed');
     localStorage.setItem('cal_token',data.token);
     localStorage.setItem('cal_gens',String(data.generationsUsed));
-    APP={mode:data.mode,isDemo:false,trialDays:data.trialDays,plan:data.plan};
+    APP={mode:data.mode,isDemo:false,trialDays:data.trialDays,plan:data.plan,email:data.email||'',stripeCustomerId:data.stripeCustomerId||null};
     err.style.display='none';
     enterApp();
     toast('Welcome back.','ok');
@@ -633,18 +629,32 @@ async function doSignup(){
   const first=g('su-first').value.trim(),email=g('su-email').value.trim(),pw=g('su-pw').value,err=g('su-err');
   if(!first||!email||!pw){showErr(err,'Please fill in all fields.');return;}
   if(pw.length<8){showErr(err,'Password must be at least 8 characters.');return;}
+  if(!suCardElement){showErr(err,'Card form still loading, please try again.');return;}
   const btn=g('su-btn'); btn.disabled=true; btn.textContent='Creating account...';
   try{
-    const res=await fetch('/.netlify/functions/auth-signup',{
+    // Tokenize card first
+    const {paymentMethod, error:cardErr} = await suStripe.createPaymentMethod({
+      type:'card', card:suCardElement, billing_details:{email}
+    });
+    if(cardErr) throw new Error(cardErr.message);
+    // Create Supabase account
+    const authRes=await fetch('/.netlify/functions/auth-signup',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({email,password:pw,firstName:first})
     });
-    const data=await res.json();
-    if(!res.ok) throw new Error(data.error||'Signup failed');
-    localStorage.setItem('cal_token',data.token);
+    const authData=await authRes.json();
+    if(!authRes.ok) throw new Error(authData.error||'Signup failed');
+    // Save card to Stripe
+    const stripeRes=await fetch('/.netlify/functions/create-checkout-session',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({mode:'save-card',paymentMethodId:paymentMethod.id,email,token:authData.token})
+    });
+    const stripeData=await stripeRes.json();
+    localStorage.setItem('cal_token',authData.token);
     localStorage.setItem('cal_gens','0');
-    APP={mode:'trial',isDemo:false,trialDays:14,plan:'solo'};
+    APP={mode:'trial',isDemo:false,trialDays:14,plan:'solo',email,stripeCustomerId:stripeData.customerId||null};
     err.style.display='none';
     enterApp();
     toast('Account created! Your 14-day free trial has started.','ok');
@@ -668,6 +678,7 @@ function signOut(){
 // APP ENTRY
 // ─────────────────────────────────────────
 function enterApp(){
+  if(APP.email && g('stripe-email')) g('stripe-email').value = APP.email;
   goScreen('s-app');
   const db=g('demo-badge'),tp=g('trial-pill'),ub=g('upgrade-btn'),gb=g('gen-btn');
   if(APP.isDemo){
@@ -817,11 +828,13 @@ function splitVersions(txt){
 // STRIPE ELEMENTS SETUP
 // ─────────────────────────────────────────
 // PASTE YOUR STRIPE PUBLISHABLE KEY HERE (pk_live_... or pk_test_...)
-const STRIPE_PK = 'YOUR_STRIPE_PUBLISHABLE_KEY_HERE';
+const STRIPE_PK = 'pk_live_51TKD3eGEX11Cve8sb2c5ta9Vnmx29aKXs2Rd1XRiBnC0KRJm2UDQZupnEz27wWiFXbi0tjLKkOmhn85ADXnPbOOe00gcUQZngR';
 
 let stripe = null;
 let cardElement = null;
 let stripeInitialized = false;
+let suStripe = null;
+let suCardElement = null;
 
 function initStripe(){
   if(stripeInitialized || APP.plan === 'enterprise') return;
@@ -857,6 +870,22 @@ function initStripe(){
   }
 }
 
+function initSignupStripe(){
+  if(suCardElement) return;
+  if(!STRIPE_PK || STRIPE_PK === 'YOUR_STRIPE_PUBLISHABLE_KEY_HERE') return;
+  if(!suStripe) suStripe = Stripe(STRIPE_PK);
+  const elements = suStripe.elements({
+    appearance: { theme:'night', variables:{ colorPrimary:'#C9A84C', colorBackground:'#1a1608', colorText:'#E8DFC0', colorDanger:'#E05252', fontFamily:'DM Sans, sans-serif', borderRadius:'7px' } }
+  });
+  suCardElement = elements.create('card', { hidePostalCode:true, style:{ base:{ fontSize:'15px', color:'#E8DFC0', '::placeholder':{ color:'#6B6040' } } } });
+  suCardElement.mount('#su-card-element');
+  suCardElement.on('change', (e) => {
+    const err = g('su-card-errors');
+    if(e.error){ err.textContent = e.error.message; err.style.display = 'block'; }
+    else { err.style.display = 'none'; }
+  });
+}
+
 function selPlan(p){
   APP.plan = p;
   ['solo','team','enterprise'].forEach(id => {
@@ -884,56 +913,38 @@ function handlePaywallCta(){
 }
 
 async function subscribe(){
-  if(!stripe || !cardElement){
-    toast('Payment form loading. Try again in a moment.', 'bad');
-    return;
-  }
-  const email = g('stripe-email')?.value?.trim();
+  const email = APP.email || g('stripe-email')?.value?.trim();
   if(!email || !email.includes('@')){ toast('Please enter your email address.', 'bad'); return; }
-
   const btn = g('paywall-cta-btn');
-  btn.disabled = true;
-  btn.textContent = 'Processing...';
-
+  btn.disabled = true; btn.textContent = 'Processing...';
   try {
-    const { paymentMethod, error } = await stripe.createPaymentMethod({
-      type: 'card',
-      card: cardElement,
-      billing_details: { email }
-    });
-
-    if(error){
-      const errEl = g('stripe-card-errors');
-      errEl.textContent = error.message;
-      errEl.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = 'Start Free Trial';
-      return;
-    }
-
     const cycle = g('billing-cycle').value;
+    let paymentMethodId = null;
+    if(!APP.stripeCustomerId){
+      if(!stripe || !cardElement){ toast('Payment form loading. Try again in a moment.', 'bad'); btn.disabled=false; btn.textContent='Start Free Trial'; return; }
+      const {paymentMethod, error} = await stripe.createPaymentMethod({ type:'card', card:cardElement, billing_details:{email} });
+      if(error){ const errEl=g('stripe-card-errors'); errEl.textContent=error.message; errEl.style.display='block'; btn.disabled=false; btn.textContent='Start Free Trial'; return; }
+      paymentMethodId = paymentMethod.id;
+    }
     const res = await fetch('/.netlify/functions/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan: APP.plan, billing: cycle, paymentMethodId: paymentMethod.id, email, mode: 'elements', token: localStorage.getItem('cal_token') })
+      body: JSON.stringify({ plan:APP.plan, billing:cycle, paymentMethodId, customerId:APP.stripeCustomerId, email, mode:'elements', token:localStorage.getItem('cal_token') })
     });
     const data = await res.json();
     if(!res.ok) throw new Error(data.error || 'Subscription failed');
-
     if(data.requiresAction && data.clientSecret){
-      const { error: confirmError } = await stripe.confirmCardPayment(data.clientSecret);
+      const stripeInst = APP.stripeCustomerId ? (suStripe || stripe) : stripe;
+      const {error:confirmError} = await stripeInst.confirmCardPayment(data.clientSecret);
       if(confirmError) throw new Error(confirmError.message);
     }
-
     APP.mode = 'active';
     localStorage.setItem('cal_gens', '0');
     enterApp();
     toast('Welcome! Your 14-day trial has started.', 'ok');
-
   } catch(err){
     toast('Error: ' + err.message, 'bad');
-    btn.disabled = false;
-    btn.textContent = 'Start Free Trial';
+    btn.disabled = false; btn.textContent = 'Start Free Trial';
   }
 }
 
@@ -946,8 +957,16 @@ function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g
 function goScreen(s){
   document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));
   g(s).classList.add('active');
-  // Init Stripe when paywall opens
-  if(s === 's-pay' && APP.plan !== 'enterprise') setTimeout(initStripe, 150);
+  if(s === 's-pay' && APP.plan !== 'enterprise'){
+    if(APP.email && g('stripe-email')) g('stripe-email').value = APP.email;
+    const cardField = g('stripe-card-element');
+    if(APP.stripeCustomerId){
+      if(cardField) cardField.closest('.field').style.display = 'none';
+    } else {
+      if(cardField) cardField.closest('.field').style.display = 'block';
+      setTimeout(initStripe, 150);
+    }
+  }
 }
 function clearOutput(){g('cards').innerHTML='';g('empty-state').style.display='flex';g('shims').classList.remove('on');}
 function showErr(el,msg){el.textContent=msg;el.style.display='block';}
