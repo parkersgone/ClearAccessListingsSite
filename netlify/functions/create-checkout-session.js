@@ -40,13 +40,14 @@ exports.handler = async (event) => {
   const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type', 'Content-Type': 'application/json' };
 
   try {
-    const { mode, email, token, customerId, paymentMethodId, plan, billing } = JSON.parse(event.body);
+    // Parse body once
+    const body = JSON.parse(event.body);
+    const { mode, email, token, customerId, paymentMethodId, plan, billing, subscriptionId } = body;
     const key = process.env.stripekey;
     if (!key) return { statusCode: 500, headers, body: JSON.stringify({ error: 'Stripe not configured' }) };
 
-    // ── MODE: setup-intent ────────────────────────────────────────────────────
-    // Called at signup: creates Stripe customer + SetupIntent, returns clientSecret
-    // so the browser can confirm the card via Stripe.js (handles 3DS automatically)
+    // ── MODE: setup-intent ────────────────────────────────────────────────
+    // Creates Stripe customer + SetupIntent at signup. No charge.
     if (mode === 'setup-intent') {
       if (!email) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Email required' }) };
       const customer = await stripePost('/customers', { email }, key);
@@ -57,22 +58,18 @@ exports.handler = async (event) => {
         'metadata[supabase_token]': token || ''
       }, key);
       if (si.error) throw new Error(si.error.message);
-      // Save customer ID to Supabase immediately so it is not lost
       await updateProfile(token, { stripe_customer_id: customer.id });
       return { statusCode: 200, headers, body: JSON.stringify({ clientSecret: si.client_secret, customerId: customer.id }) };
     }
 
-    // ── MODE: upgrade ────────────────────────────────────────────────────────
-    // Called when user hits paywall and already has a trialing subscription.
-    // Ends the trial immediately — charges their card now, full access granted.
+    // ── MODE: upgrade ────────────────────────────────────────────────────
+    // Ends trial immediately and charges card now.
     if (mode === 'upgrade') {
-      const { subscriptionId } = JSON.parse(event.body);
       if (!subscriptionId) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Subscription ID required' }) };
-      // PATCH /v1/subscriptions/:id with trial_end=now ends trial and charges immediately
       const res = await fetch(`${STRIPE_API}/subscriptions/${subscriptionId}`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ trial_end: 'now', 'proration_behavior': 'none' }).toString()
+        body: new URLSearchParams({ trial_end: 'now', proration_behavior: 'none' }).toString()
       });
       const updated = await res.json();
       if (updated.error) throw new Error(updated.error.message);
@@ -80,20 +77,16 @@ exports.handler = async (event) => {
       return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
     }
 
-    // ── MODE: subscribe ───────────────────────────────────────────────────────
-    // Called when user has no existing subscription (e.g. logged in from another device).
-    // Customer already exists with saved card from setup-intent step.
+    // ── MODE: subscribe ───────────────────────────────────────────────────
+    // Creates trialing subscription. Used at signup and as fallback.
     if (mode === 'subscribe') {
       if (!customerId) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Customer ID required' }) };
       if (!PRICE_IDS[plan]) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid plan' }) };
       const priceId = PRICE_IDS[plan][billing === 'annual' ? 'annual' : 'monthly'];
-
-      // If a new paymentMethodId was provided (user changed card), attach it
       if (paymentMethodId) {
         await stripePost(`/payment_methods/${paymentMethodId}/attach`, { customer: customerId }, key);
         await stripePost(`/customers/${customerId}`, { 'invoice_settings[default_payment_method]': paymentMethodId }, key);
       }
-
       const subscription = await stripePost('/subscriptions', {
         customer: customerId,
         'items[0][price]': priceId,
@@ -102,10 +95,8 @@ exports.handler = async (event) => {
         'expand[0]': 'latest_invoice.payment_intent'
       }, key);
       if (subscription.error) throw new Error(subscription.error.message);
-
-      await updateProfile(token, { mode: 'active', plan, subscription_id: subscription.id });
-
-      // Handle 3DS on trial start (rare but possible)
+      // mode stays 'trial' — they are trialing, not yet active
+      await updateProfile(token, { mode: 'trial', plan, subscription_id: subscription.id });
       const pi = subscription.latest_invoice && subscription.latest_invoice.payment_intent;
       if (pi && pi.status === 'requires_action') {
         return { statusCode: 200, headers, body: JSON.stringify({ requiresAction: true, clientSecret: pi.client_secret }) };
