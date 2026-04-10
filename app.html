@@ -336,6 +336,7 @@ select option{background:var(--dark3)}
       </div>
 
       <button class="btn btn-outline" style="margin-top:0.25rem" onclick="goScreen(&#39;s-app&#39;)">Back to App</button>
+      <p style="text-align:center;margin-top:1.5rem"><button onclick="confirmCancel()" style="background:none;border:none;color:var(--text-dim);font-size:0.68rem;cursor:pointer;text-decoration:underline;opacity:0.5">cancel subscription</button></p>
       <p class="pw-fine">🔒 Secured by Stripe. Clear Access Listings never stores card details.</p>
     </div>
   </div>
@@ -994,6 +995,39 @@ async function subscribe(){
   } catch(err){
     toast('Error: ' + err.message, 'bad');
     btn.disabled = false; btn.textContent = 'Upgrade Now';
+  }
+}
+
+// ─────────────────────────────────────────
+// CANCEL SUBSCRIPTION
+// ─────────────────────────────────────────
+function confirmCancel(){
+  const confirmed = window.confirm('Are you sure you want to cancel?\n\nYou will lose access immediately. This cannot be undone.');
+  if(confirmed) doCancel();
+}
+async function doCancel(){
+  const token = localStorage.getItem('cal_token');
+  const subId = APP.subscriptionId || localStorage.getItem('cal_subscription_id');
+  if(!token || !subId){ toast('Nothing to cancel.', 'nudge'); return; }
+  try{
+    const res = await fetch('/.netlify/functions/cancel-subscription', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token, subscriptionId: subId })
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Cancellation failed');
+    localStorage.removeItem('cal_token');
+    localStorage.removeItem('cal_email');
+    localStorage.removeItem('cal_customer_id');
+    localStorage.removeItem('cal_subscription_id');
+    localStorage.setItem('cal_gens', '0');
+    APP = {mode:'guest', isDemo:false, trialDays:14, plan:'solo', email:'', stripeCustomerId:null, subscriptionId:null};
+    clearOutput();
+    goScreen('s-auth');
+    toast('Subscription cancelled.', 'nudge');
+  }catch(e){
+    toast('Error: ' + e.message, 'bad');
   }
 }
 
