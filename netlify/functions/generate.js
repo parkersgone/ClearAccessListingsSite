@@ -8,9 +8,9 @@ exports.handler = async (event) => {
   const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type', 'Content-Type': 'application/json' };
   try {
     const { prompt, system } = JSON.parse(event.body);
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = (process.env.ANTHROPIC_API_KEY || '').trim();
     if (!apiKey) {
-      return { statusCode: 500, headers, body: JSON.stringify({ error: 'API key not configured on server' }) };
+      return { statusCode: 500, headers, body: JSON.stringify({ error: 'ANTHROPIC_API_KEY is not set in Netlify environment variables' }) };
     }
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -18,10 +18,13 @@ exports.handler = async (event) => {
       body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 2500, system: system, messages: [{ role: 'user', content: prompt }] })
     });
     const data = await response.json();
-    if (!response.ok) throw new Error(data.error?.message || 'Anthropic API error');
+    if (!response.ok) {
+      console.error('Anthropic error:', JSON.stringify(data));
+      throw new Error(data.error?.message || 'Anthropic API error');
+    }
     return { statusCode: 200, headers, body: JSON.stringify({ text: data.content[0].text }) };
   } catch (err) {
-    console.error('Generate error:', err);
+    console.error('Generate error:', err.message);
     return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
   }
 };
