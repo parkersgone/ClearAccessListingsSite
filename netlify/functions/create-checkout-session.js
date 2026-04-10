@@ -62,8 +62,26 @@ exports.handler = async (event) => {
       return { statusCode: 200, headers, body: JSON.stringify({ clientSecret: si.client_secret, customerId: customer.id }) };
     }
 
+    // ── MODE: upgrade ────────────────────────────────────────────────────────
+    // Called when user hits paywall and already has a trialing subscription.
+    // Ends the trial immediately — charges their card now, full access granted.
+    if (mode === 'upgrade') {
+      const { subscriptionId } = JSON.parse(event.body);
+      if (!subscriptionId) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Subscription ID required' }) };
+      // PATCH /v1/subscriptions/:id with trial_end=now ends trial and charges immediately
+      const res = await fetch(`${STRIPE_API}/subscriptions/${subscriptionId}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ trial_end: 'now', 'proration_behavior': 'none' }).toString()
+      });
+      const updated = await res.json();
+      if (updated.error) throw new Error(updated.error.message);
+      await updateProfile(token, { mode: 'active' });
+      return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
+    }
+
     // ── MODE: subscribe ───────────────────────────────────────────────────────
-    // Called when user hits paywall: creates the actual subscription with 14-day trial.
+    // Called when user has no existing subscription (e.g. logged in from another device).
     // Customer already exists with saved card from setup-intent step.
     if (mode === 'subscribe') {
       if (!customerId) return { statusCode: 400, headers, body: JSON.stringify({ error: 'Customer ID required' }) };
