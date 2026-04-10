@@ -167,7 +167,7 @@ select option{background:var(--dark3)}
       </div>
       <div class="tabs">
         <button class="tab active" onclick="authTab(&#39;in&#39;)">Sign In</button>
-        <button class="tab" onclick="authTab(&#39;up&#39;)">Start Free Trial</button>
+        <button class="tab" onclick="authTab(&#39;up&#39;)">Upgrade Now</button>
       </div>
 
       <div id="pane-in">
@@ -513,7 +513,7 @@ FINAL CHECK: Search your output for the character. If you find even one, rewrite
 // ─────────────────────────────────────────
 // STATE
 // ─────────────────────────────────────────
-let APP={mode:'guest',isDemo:false,trialDays:14,plan:'solo',email:'',stripeCustomerId:null};
+let APP={mode:'guest',isDemo:false,trialDays:14,plan:'solo',email:'',stripeCustomerId:null,subscriptionId:null};
 
 // Restore session on page load, then handle URL params
 (async function(){
@@ -536,7 +536,8 @@ let APP={mode:'guest',isDemo:false,trialDays:14,plan:'solo',email:'',stripeCusto
     localStorage.setItem('cal_gens', String(data.generationsUsed));
     if(data.email) localStorage.setItem('cal_email', data.email);
     if(data.stripeCustomerId) localStorage.setItem('cal_customer_id', data.stripeCustomerId);
-    APP = {mode:data.mode, isDemo:false, trialDays:data.trialDays, plan:data.plan, email:data.email||'', stripeCustomerId:data.stripeCustomerId||null};
+    if(data.subscriptionId) localStorage.setItem('cal_subscription_id', data.subscriptionId);
+    APP = {mode:data.mode, isDemo:false, trialDays:data.trialDays, plan:data.plan, email:data.email||'', stripeCustomerId:data.stripeCustomerId||null, subscriptionId:data.subscriptionId||null};
     enterApp();
     if(subscribed) toast('Welcome to Clear Access Listings! Your subscription is active.','ok');
   }catch(e){
@@ -624,7 +625,8 @@ async function doLogin(){
     localStorage.setItem('cal_gens',String(data.generationsUsed));
     if(data.email) localStorage.setItem('cal_email',data.email);
     if(data.stripeCustomerId) localStorage.setItem('cal_customer_id',data.stripeCustomerId);
-    APP={mode:data.mode,isDemo:false,trialDays:data.trialDays,plan:data.plan,email:data.email||'',stripeCustomerId:data.stripeCustomerId||null};
+    if(data.subscriptionId) localStorage.setItem('cal_subscription_id',data.subscriptionId);
+    APP={mode:data.mode,isDemo:false,trialDays:data.trialDays,plan:data.plan,email:data.email||'',stripeCustomerId:data.stripeCustomerId||null,subscriptionId:data.subscriptionId||null};
     err.style.display='none';
     enterApp();
     toast('Welcome back.','ok');
@@ -673,11 +675,13 @@ async function doSignup(){
     });
     const subData=await subRes.json();
     if(!subRes.ok) throw new Error(subData.error||'Failed to start trial subscription');
+    const subscriptionId=subData.subscriptionId||null;
     localStorage.setItem('cal_token',authData.token);
     localStorage.setItem('cal_gens','0');
     localStorage.setItem('cal_email',email);
     localStorage.setItem('cal_customer_id',customerId);
-    APP={mode:'trial',isDemo:false,trialDays:14,plan:'solo',email,stripeCustomerId:customerId};
+    if(subscriptionId) localStorage.setItem('cal_subscription_id',subscriptionId);
+    APP={mode:'trial',isDemo:false,trialDays:14,plan:'solo',email,stripeCustomerId:customerId,subscriptionId};
     err.style.display='none';
     enterApp();
     toast('Account created! Your 14-day free trial has started.','ok');
@@ -694,8 +698,9 @@ function signOut(){
   localStorage.removeItem('cal_token');
   localStorage.removeItem('cal_email');
   localStorage.removeItem('cal_customer_id');
+  localStorage.removeItem('cal_subscription_id');
   localStorage.setItem('cal_gens','0');
-  APP={mode:'guest',isDemo:false,trialDays:14,plan:'solo',email:'',stripeCustomerId:null};
+  APP={mode:'guest',isDemo:false,trialDays:14,plan:'solo',email:'',stripeCustomerId:null,subscriptionId:null};
   clearOutput();goScreen('s-auth');
 }
 
@@ -941,18 +946,33 @@ async function subscribe(){
   const email = APP.email || localStorage.getItem('cal_email') || g('stripe-email')?.value?.trim();
   if(!email || !email.includes('@')){ toast('Please enter your email address.', 'bad'); return; }
   const savedCid = APP.stripeCustomerId || localStorage.getItem('cal_customer_id');
-  // If user clicked "use different card", new card section is visible
+  const savedSubId = APP.subscriptionId || localStorage.getItem('cal_subscription_id');
   const usingNewCard = g('paywall-new-card-section').style.display !== 'none' && !savedCid;
   const btn = g('paywall-cta-btn');
   btn.disabled = true; btn.textContent = 'Processing...';
   try {
     const cycle = g('billing-cycle').value;
+    // If they already have a trialing subscription, end the trial now and charge immediately
+    if(savedSubId){
+      const res = await fetch('/.netlify/functions/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode:'upgrade', subscriptionId:savedSubId, token:localStorage.getItem('cal_token') })
+      });
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Upgrade failed');
+      APP.mode = 'active';
+      localStorage.setItem('cal_gens', '0');
+      enterApp();
+      toast('You\'re now on the full plan. Enjoy unlimited generations!', 'ok');
+      return;
+    }
+    // No existing subscription — create one (e.g. logged in from different device)
     let paymentMethodId = null;
-    // Only tokenize a new card if the user has no saved card OR chose a different card
     if(!savedCid || usingNewCard){
-      if(!stripe || !cardElement){ toast('Payment form loading. Try again in a moment.', 'bad'); btn.disabled=false; btn.textContent='Start Free Trial'; return; }
+      if(!stripe || !cardElement){ toast('Payment form loading. Try again in a moment.', 'bad'); btn.disabled=false; btn.textContent='Upgrade Now'; return; }
       const {paymentMethod, error} = await stripe.createPaymentMethod({ type:'card', card:cardElement, billing_details:{email} });
-      if(error){ const errEl=g('stripe-card-errors'); errEl.textContent=error.message; errEl.style.display='block'; btn.disabled=false; btn.textContent='Start Free Trial'; return; }
+      if(error){ const errEl=g('stripe-card-errors'); errEl.textContent=error.message; errEl.style.display='block'; btn.disabled=false; btn.textContent='Upgrade Now'; return; }
       paymentMethodId = paymentMethod.id;
     }
     const res = await fetch('/.netlify/functions/create-checkout-session', {
@@ -970,10 +990,10 @@ async function subscribe(){
     APP.mode = 'active';
     localStorage.setItem('cal_gens', '0');
     enterApp();
-    toast('Welcome! Your 14-day trial has started.', 'ok');
+    toast('You\'re now on the full plan. Enjoy unlimited generations!', 'ok');
   } catch(err){
     toast('Error: ' + err.message, 'bad');
-    btn.disabled = false; btn.textContent = 'Start Free Trial';
+    btn.disabled = false; btn.textContent = 'Upgrade Now';
   }
 }
 
