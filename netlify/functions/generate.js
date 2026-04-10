@@ -12,19 +12,11 @@ exports.handler = async (event) => {
     if (!apiKey) {
       return { statusCode: 500, headers, body: JSON.stringify({ error: 'ANTHROPIC_API_KEY is not set in Netlify environment variables' }) };
     }
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 22000);
-    let response;
-    try {
-      response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, system: system, messages: [{ role: 'user', content: prompt }] }),
-        signal: controller.signal
-      });
-    } finally {
-      clearTimeout(timeout);
-    }
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1500, system: system, messages: [{ role: 'user', content: prompt }] })
+    });
     const data = await response.json();
     if (!response.ok) {
       console.error('Anthropic error:', JSON.stringify(data));
@@ -33,7 +25,6 @@ exports.handler = async (event) => {
     return { statusCode: 200, headers, body: JSON.stringify({ text: data.content[0].text }) };
   } catch (err) {
     console.error('Generate error:', err.message);
-    const msg = err.name === 'AbortError' ? 'Request timed out - try again' : err.message;
-    return { statusCode: 500, headers, body: JSON.stringify({ error: msg }) };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
   }
 };
