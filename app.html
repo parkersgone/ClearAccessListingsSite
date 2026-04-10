@@ -312,11 +312,17 @@ select option{background:var(--dark3)}
           <label>Email</label>
           <input type="email" id="stripe-email" placeholder="your@email.com" style="width:100%;padding:0.6rem 0.75rem;background:var(--dark3);border:1px solid var(--border-med);border-radius:7px;color:var(--text);font-size:0.9rem;font-family:var(--sans);box-sizing:border-box">
         </div>
-        <div class="field" style="text-align:left;margin-bottom:1rem">
-          <label>Card details</label>
-          <!-- Stripe mounts the card element here -->
-          <div id="stripe-card-element" style="padding:0.65rem 0.75rem;background:var(--dark3);border:1px solid var(--border-med);border-radius:7px;min-height:40px"></div>
-          <div id="stripe-card-errors" style="color:var(--red);font-size:0.78rem;margin-top:0.4rem;display:none"></div>
+        <div id="paywall-card-wrap" style="text-align:left;margin-bottom:1rem">
+          <!-- Shown when no saved card -->
+          <div id="paywall-new-card-section" class="field">
+            <label>Card details</label>
+            <div id="stripe-card-element" style="padding:0.65rem 0.75rem;background:var(--dark3);border:1px solid var(--border-med);border-radius:7px;min-height:40px"></div>
+            <div id="stripe-card-errors" style="color:var(--red);font-size:0.78rem;margin-top:0.4rem;display:none"></div>
+          </div>
+          <!-- Shown when card already saved from signup -->
+          <div id="paywall-saved-card-section" style="display:none;padding:0.6rem 0.75rem;background:var(--dark3);border:1px solid var(--border-gold);border-radius:7px;font-size:0.85rem;color:var(--text-muted)">
+            Card saved from signup &nbsp;<button onclick="showNewCardEntry()" style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:0.82rem;text-decoration:underline;padding:0">Use a different card</button>
+          </div>
         </div>
         <p style="font-size:0.73rem;color:var(--text-dim);text-align:left;margin-bottom:0.85rem">14-day free trial. Card required but not charged until day 15. Cancel anytime before then.</p>
         <button class="btn btn-gold" style="margin-bottom:0.5rem" id="paywall-cta-btn" onclick="handlePaywallCta()">Start Free Trial</button>
@@ -528,6 +534,8 @@ let APP={mode:'guest',isDemo:false,trialDays:14,plan:'solo',email:'',stripeCusto
     const data = await res.json();
     if(!res.ok || !data.valid){ localStorage.removeItem('cal_token'); return; }
     localStorage.setItem('cal_gens', String(data.generationsUsed));
+    if(data.email) localStorage.setItem('cal_email', data.email);
+    if(data.stripeCustomerId) localStorage.setItem('cal_customer_id', data.stripeCustomerId);
     APP = {mode:data.mode, isDemo:false, trialDays:data.trialDays, plan:data.plan, email:data.email||'', stripeCustomerId:data.stripeCustomerId||null};
     enterApp();
     if(subscribed) toast('Welcome to Clear Access Listings! Your subscription is active.','ok');
@@ -614,6 +622,8 @@ async function doLogin(){
     if(!res.ok) throw new Error(data.error||'Login failed');
     localStorage.setItem('cal_token',data.token);
     localStorage.setItem('cal_gens',String(data.generationsUsed));
+    if(data.email) localStorage.setItem('cal_email',data.email);
+    if(data.stripeCustomerId) localStorage.setItem('cal_customer_id',data.stripeCustomerId);
     APP={mode:data.mode,isDemo:false,trialDays:data.trialDays,plan:data.plan,email:data.email||'',stripeCustomerId:data.stripeCustomerId||null};
     err.style.display='none';
     enterApp();
@@ -632,12 +642,7 @@ async function doSignup(){
   if(!suCardElement){showErr(err,'Card form still loading, please try again.');return;}
   const btn=g('su-btn'); btn.disabled=true; btn.textContent='Creating account...';
   try{
-    // Tokenize card first
-    const {paymentMethod, error:cardErr} = await suStripe.createPaymentMethod({
-      type:'card', card:suCardElement, billing_details:{email}
-    });
-    if(cardErr) throw new Error(cardErr.message);
-    // Create Supabase account
+    // Step 1: Create Supabase account
     const authRes=await fetch('/.netlify/functions/auth-signup',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -645,16 +650,26 @@ async function doSignup(){
     });
     const authData=await authRes.json();
     if(!authRes.ok) throw new Error(authData.error||'Signup failed');
-    // Save card to Stripe
-    const stripeRes=await fetch('/.netlify/functions/create-checkout-session',{
+    // Step 2: Create Stripe customer + SetupIntent (no charge)
+    const siRes=await fetch('/.netlify/functions/create-checkout-session',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({mode:'save-card',paymentMethodId:paymentMethod.id,email,token:authData.token})
+      body:JSON.stringify({mode:'setup-intent',email,token:authData.token})
     });
-    const stripeData=await stripeRes.json();
+    const siData=await siRes.json();
+    if(!siRes.ok) throw new Error(siData.error||'Failed to initialize payment');
+    // Step 3: Confirm SetupIntent with card — Stripe handles 3DS if needed
+    const {setupIntent, error:siErr}=await suStripe.confirmCardSetup(siData.clientSecret,{
+      payment_method:{card:suCardElement,billing_details:{email}}
+    });
+    if(siErr) throw new Error(siErr.message);
+    // Card is now saved and authenticated. Store customer ID.
+    const customerId=siData.customerId;
     localStorage.setItem('cal_token',authData.token);
     localStorage.setItem('cal_gens','0');
-    APP={mode:'trial',isDemo:false,trialDays:14,plan:'solo',email,stripeCustomerId:stripeData.customerId||null};
+    localStorage.setItem('cal_email',email);
+    localStorage.setItem('cal_customer_id',customerId);
+    APP={mode:'trial',isDemo:false,trialDays:14,plan:'solo',email,stripeCustomerId:customerId};
     err.style.display='none';
     enterApp();
     toast('Account created! Your 14-day free trial has started.','ok');
@@ -669,8 +684,10 @@ function doDemo(){APP.mode='demo';APP.isDemo=true;enterApp();}
 
 function signOut(){
   localStorage.removeItem('cal_token');
+  localStorage.removeItem('cal_email');
+  localStorage.removeItem('cal_customer_id');
   localStorage.setItem('cal_gens','0');
-  APP={mode:'guest',isDemo:false,trialDays:14,plan:'solo'};
+  APP={mode:'guest',isDemo:false,trialDays:14,plan:'solo',email:'',stripeCustomerId:null};
   clearOutput();goScreen('s-auth');
 }
 
@@ -913,14 +930,18 @@ function handlePaywallCta(){
 }
 
 async function subscribe(){
-  const email = APP.email || g('stripe-email')?.value?.trim();
+  const email = APP.email || localStorage.getItem('cal_email') || g('stripe-email')?.value?.trim();
   if(!email || !email.includes('@')){ toast('Please enter your email address.', 'bad'); return; }
+  const savedCid = APP.stripeCustomerId || localStorage.getItem('cal_customer_id');
+  // If user clicked "use different card", new card section is visible
+  const usingNewCard = g('paywall-new-card-section').style.display !== 'none' && !savedCid;
   const btn = g('paywall-cta-btn');
   btn.disabled = true; btn.textContent = 'Processing...';
   try {
     const cycle = g('billing-cycle').value;
     let paymentMethodId = null;
-    if(!APP.stripeCustomerId){
+    // Only tokenize a new card if the user has no saved card OR chose a different card
+    if(!savedCid || usingNewCard){
       if(!stripe || !cardElement){ toast('Payment form loading. Try again in a moment.', 'bad'); btn.disabled=false; btn.textContent='Start Free Trial'; return; }
       const {paymentMethod, error} = await stripe.createPaymentMethod({ type:'card', card:cardElement, billing_details:{email} });
       if(error){ const errEl=g('stripe-card-errors'); errEl.textContent=error.message; errEl.style.display='block'; btn.disabled=false; btn.textContent='Start Free Trial'; return; }
@@ -929,12 +950,12 @@ async function subscribe(){
     const res = await fetch('/.netlify/functions/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plan:APP.plan, billing:cycle, paymentMethodId, customerId:APP.stripeCustomerId, email, mode:'elements', token:localStorage.getItem('cal_token') })
+      body: JSON.stringify({ mode:'subscribe', plan:APP.plan, billing:cycle, customerId:savedCid, paymentMethodId, email, token:localStorage.getItem('cal_token') })
     });
     const data = await res.json();
     if(!res.ok) throw new Error(data.error || 'Subscription failed');
     if(data.requiresAction && data.clientSecret){
-      const stripeInst = APP.stripeCustomerId ? (suStripe || stripe) : stripe;
+      const stripeInst = stripe || suStripe;
       const {error:confirmError} = await stripeInst.confirmCardPayment(data.clientSecret);
       if(confirmError) throw new Error(confirmError.message);
     }
@@ -958,15 +979,24 @@ function goScreen(s){
   document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));
   g(s).classList.add('active');
   if(s === 's-pay' && APP.plan !== 'enterprise'){
-    if(APP.email && g('stripe-email')) g('stripe-email').value = APP.email;
-    const cardField = g('stripe-card-element');
-    if(APP.stripeCustomerId){
-      if(cardField) cardField.closest('.field').style.display = 'none';
+    // Pre-fill email from memory or localStorage
+    const savedEmail = APP.email || localStorage.getItem('cal_email') || '';
+    if(savedEmail && g('stripe-email')) g('stripe-email').value = savedEmail;
+    const savedCid = APP.stripeCustomerId || localStorage.getItem('cal_customer_id');
+    if(savedCid){
+      g('paywall-new-card-section').style.display = 'none';
+      g('paywall-saved-card-section').style.display = 'block';
     } else {
-      if(cardField) cardField.closest('.field').style.display = 'block';
+      g('paywall-new-card-section').style.display = 'block';
+      g('paywall-saved-card-section').style.display = 'none';
       setTimeout(initStripe, 150);
     }
   }
+}
+function showNewCardEntry(){
+  g('paywall-saved-card-section').style.display = 'none';
+  g('paywall-new-card-section').style.display = 'block';
+  setTimeout(initStripe, 100);
 }
 function clearOutput(){g('cards').innerHTML='';g('empty-state').style.display='flex';g('shims').classList.remove('on');}
 function showErr(el,msg){el.textContent=msg;el.style.display='block';}
